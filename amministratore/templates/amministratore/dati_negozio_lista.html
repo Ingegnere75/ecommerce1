@@ -1,0 +1,64 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestione Dati Negozio{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h2 class="text-primary fw-bold mb-4">📆 Dati Negozio</h2>
+
+  <!-- Pulsante aggiunta -->
+  <div class="mb-3">
+    <a href="{% url 'modifica_dati_negozio' %}" class="btn btn-success">+ Aggiungi / Modifica Dati Negozio</a>
+  </div>
+
+  <!-- Tabella dati negozio -->
+  <table class="table table-bordered table-hover">
+    <thead class="table-light">
+      <tr>
+        <th>Nome</th>
+        <th>Indirizzo</th>
+        <th>CAP/Città</th>
+        <th>P.IVA</th>
+        <th>Email</th>
+        <th>Telefono</th>
+        <th>Logo</th>
+        <th>Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in tutti_contatti %}
+      <tr class="{% if contatti and item.id == contatti.id %}table-success{% endif %}">
+        <td>{{ item.nome }}</td>
+        <td>{{ item.indirizzo }}</td>
+        <td>{{ item.cap_citta }}</td>
+        <td>{{ item.partita_iva }}</td>
+        <td>{{ item.email }}</td>
+        <td>{{ item.telefono }}</td>
+        <td>
+          {% if item.logo %}
+            <img src="{{ item.logo.url }}" width="60" height="60" style="object-fit:contain;">
+          {% else %} - {% endif %}
+        </td>
+        <td>
+          {% if contatti and item.id != contatti.id %}
+            <a href="{% url 'usa_dati_negozio' item.id %}" class="btn btn-sm btn-info">Usa Questo</a>
+          {% else %}
+            <span class="badge bg-success">Attivo</span>
+          {% endif %}
+          <a href="{% url 'elimina_dati_negozio' item.id %}" class="btn btn-sm btn-danger"
+             onclick="return confirm('Sei sicuro di voler eliminare questo record?');">Elimina</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="text-center">Nessun dato negozio disponibile.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

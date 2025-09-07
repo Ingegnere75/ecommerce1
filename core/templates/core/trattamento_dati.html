@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+    </a>
+  </div>
+  <h1>Trattamento Dati Personali</h1>
+  <p>Qui puoi descrivere come vengono trattati i dati personali degli utenti. Inserisci anche immagini, video, banner ecc.</p>
+  <img src="{% static 'images/data.jpg' %}" class="img-fluid my-4">
+</div>
+{% endblock %}

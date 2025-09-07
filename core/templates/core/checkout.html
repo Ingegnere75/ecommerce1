@@ -1,0 +1,119 @@
+ {% extends 'base.html' %}
+{% load static %}
+{% block title %}Samadafilati Checkout{% endblock %}
+{% block content %}
+<div class="container my-5">
+
+  <div class="mb-4 text-start">
+    <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-primary rounded-pill shadow-sm d-inline-flex align-items-center px-4 py-2">
+      <i class="fas fa-arrow-left me-2"></i> Torna alla pagina precedente
+    </a>
+  </div>
+  
+  
+  <h2 class="mb-4">Checkout</h2>
+
+  <form method="POST">
+    {% csrf_token %}
+
+    <div class="row">
+      <div class="col-md-6">
+        <h5 class="text-primary">🏠 Dati di Fatturazione</h5>
+        <div class="mb-3">
+          <label for="nome" class="form-label">Nome</label>
+          <input type="text" class="form-control" name="nome" required>
+        </div>
+        <div class="mb-3">
+          <label for="cognome" class="form-label">Cognome</label>
+          <input type="text" class="form-control" name="cognome" required>
+        </div>
+        <div class="mb-3">
+          <label for="indirizzo" class="form-label">Indirizzo</label>
+          <input type="text" class="form-control" name="indirizzo" required>
+        </div>
+        <div class="mb-3">
+          <label for="civico" class="form-label">Civico</label>
+          <input type="text" class="form-control" name="civico" required>
+        </div>
+        <div class="mb-3">
+          <label for="cap" class="form-label">CAP</label>
+          <input type="text" class="form-control" name="cap" required>
+        </div>
+        <div class="mb-3">
+          <label for="citta" class="form-label">Città</label>
+          <input type="text" class="form-control" name="citta" required>
+        </div>
+        <div class="mb-3">
+          <label for="provincia" class="form-label">Provincia</label>
+          <input type="text" class="form-control" name="provincia" required>
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input type="email" class="form-control" name="email" required>
+        </div>
+        <div class="mb-3">
+          <label for="telefono" class="form-label">Telefono</label>
+          <input type="text" class="form-control" name="telefono" required>
+        </div>
+        <div class="mb-3">
+          <label for="codice_fiscale" class="form-label">Codice Fiscale</label>
+          <input type="text" class="form-control" name="codice_fiscale" required>
+        </div>
+
+        <div class="form-check my-4">
+          <input class="form-check-input" type="checkbox" name="fatturazioneDiversa" id="spedizioneDiversaCheck">
+          <label class="form-check-label fw-semibold" for="spedizioneDiversaCheck">
+            I dati di spedizione sono diversi da quelli di fatturazione
+          </label>
+        </div>
+      </div>
+
+      <div class="col-md-6" id="datiSpedizioneDiv" style="display: none;">
+        <h5 class="text-primary">📦 Dati di Spedizione</h5>
+        <div class="mb-3">
+          <label class="form-label">Nome</label>
+          <input type="text" class="form-control" name="nome_spedizione">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Cognome</label>
+          <input type="text" class="form-control" name="cognome_spedizione">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Indirizzo</label>
+          <input type="text" class="form-control" name="indirizzo_spedizione">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Civico</label>
+          <input type="text" class="form-control" name="civico_spedizione">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">CAP</label>
+          <input type="text" class="form-control" name="cap_spedizione">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Città</label>
+          <input type="text" class="form-control" name="citta_spedizione">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Provincia</label>
+          <input type="text" class="form-control" name="provincia_spedizione">
+        </div>
+      </div>
+    </div>
+
+    <div class="mt-4">
+      <button type="submit" class="btn btn-primary">Continua al Riepilogo</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const checkbox = document.getElementById('spedizioneDiversaCheck');
+  const spedizioneDiv = document.getElementById('datiSpedizioneDiv');
+
+  checkbox.addEventListener('change', function () {
+    spedizioneDiv.style.display = this.checked ? 'block' : 'none';
+  });
+</script>
+
+{% endblock %}

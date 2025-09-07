@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Arrivi Magazzino{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Pulsante Torna alla Dashboard -->
+  <div class="mb-4">
+    <a href="{% url 'admin-magazzino' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna al Magazzino
+    </a>
+  </div>
+
+  <!-- Titolo -->
+  <h2 class="text-center mb-5 display-6 fw-bold" style="font-family: 'Playfair Display', serif;">
+    📦 Gestione Arrivi in Magazzino
+  </h2>
+
+  <!-- Messaggi -->
+  {% if messages %}
+    {% for message in messages %}
+      <div class="alert alert-success alert-dismissible fade show" role="alert" id="success-message">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Chiudi"></button>
+      </div>
+    {% endfor %}
+  {% endif %}
+
+  <!-- Bottone per mostrare il form -->
+  <div class="text-center mb-4">
+    <button class="btn btn-dark px-5 py-2 rounded-pill shadow-sm" type="button" data-bs-toggle="collapse" data-bs-target="#formEntrataMagazzino">
+      <i class="fas fa-boxes me-2"></i> Inserisci Nuovo Arrivo
+    </button>
+  </div>
+
+  <!-- Form migliorato -->
+  <div class="collapse show" id="formEntrataMagazzino">
+    <div class="card card-body border-0 shadow-sm bg-white mb-5 px-4 py-4">
+      <form method="POST" class="row g-4">
+        {% csrf_token %}
+        {% for field in form %}
+          <div class="col-md-6">
+            <div class="form-group">
+              <label for="{{ field.id_for_label }}" class="fw-bold text-secondary">{{ field.label }}</label>
+
+              {% if field.name == 'data_arrivo' %}
+                <input type="date" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" placeholder="Seleziona una data" value="{{ field.value|default:'' }}">
+              {% elif field.name == 'prezzo_totale' or field.name == 'codice_arrivo' %}
+                <input type="text" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control bg-light text-muted" readonly value="{{ field.value|default:'' }}">
+              {% else %}
+                <input type="text" name="{{ field.name }}" id="{{ field.id_for_label }}" class="form-control" placeholder="{{ field.label }}" value="{{ field.value|default:'' }}">
+              {% endif %}
+
+              {% if field.errors %}
+                <div class="text-danger small mt-1">{{ field.errors }}</div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+        <div class="col-13 text-end mt-3">
+          <button type="submit" class="btn btn-success btn-lg rounded-pill px-4 shadow-sm">
+            <i class="fas fa-check-circle me-1"></i> Salva Arrivo
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Ricerca e filtro IVA -->
+  <div class="container-fluid">
+    <div class="row justify-content-between align-items-center mb-4">
+      <div class="col-md-6">
+        <form method="get" class="d-flex">
+          <input type="text" name="q" placeholder="🔍 Cerca per codice o nome prodotto"
+                 value="{{ query }}" class="form-control form-control-lg shadow-sm rounded-pill me-2" />
+          <button type="submit" class="btn btn-outline-primary rounded-pill px-4">Cerca</button>
+        </form>
+      </div>
+      <div class="col-md-6 d-flex justify-content-md-end align-items-center mt-3 mt-md-0">
+        <label for="ivaInput" class="me-2 fw-semibold text-muted">
+          <i class="fas fa-percent text-primary"></i> IVA dichiarata:
+        </label>
+        <input type="number" id="ivaInput" class="form-control w-auto shadow-sm rounded-pill"
+               min="1" max="100" value="22" style="width: 80px;">
+        <span class="ms-2 text-muted">%</span>
+      </div>
+    </div>
+
+    <!-- Tabella -->
+    <div class="table-responsive shadow-sm">
+      <table class="table table-striped table-bordered align-middle text-center">
+        <thead class="table-dark">
+          <tr>
+            <th>Codice</th>
+            <th>Prodotto</th>
+            <th>Quantità</th>
+            <th>Fornitore</th>
+            <th>Società</th>
+            <th>Prezzo con IVA</th>
+            <th>Prezzo senza IVA</th>
+            <th>Trasporto</th>
+            <th>Totale</th>
+            <th>Data</th>
+            <th>Aggiunto</th>
+            <th>Azioni</th>
+            <th>Link</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entrata in entrate %}
+            <tr>
+              <td>{{ entrata.codice_arrivo }}</td>
+              <td>{{ entrata.nome_prodotto }}</td>
+              <td>{{ entrata.quantita }}</td>
+              <td>{{ entrata.nome_fornitore }} {{ entrata.cognome_fornitore }}</td>
+              <td>{{ entrata.nome_societa }}</td>
+              <td>€ {{ entrata.prezzo_con_iva }}</td>
+              <td class="prezzo-senza-iva" data-prezzo="{{ entrata.prezzo_con_iva }}">--</td>
+              <td>€ {{ entrata.prezzo_trasporto }}</td>
+              <td class="fw-bold text-success">€ {{ entrata.prezzo_totale }}</td>
+              <td>{{ entrata.data_arrivo|date:"d/m/Y" }}</td>
+              <td>
+                <button class="btn btn-sm toggle-aggiunto-btn"
+                        data-id="{{ entrata.pk }}"
+                        data-status="{{ entrata.aggiunto }}">
+                  {% if entrata.aggiunto %}
+                    <i class="fas fa-check-circle text-success"></i>
+                  {% else %}
+                    <i class="fas fa-times-circle text-danger"></i>
+                  {% endif %}
+                </button>
+              </td>
+              <td>
+                <a href="{% url 'modifica_entrata_magazzino' entrata.pk %}" class="btn btn-warning btn-sm rounded-pill mb-1">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <a href="{% url 'elimina_entrata_magazzino' entrata.pk %}" class="btn btn-danger btn-sm rounded-pill"
+                   onclick="return confirm('Confermi eliminazione definitiva?')">
+                  <i class="fas fa-trash-alt"></i>
+                </a>
+              </td>
+             <td>
+             {% if entrata.link_fornitore %}
+              <a href="{{ entrata.link_fornitore }}" target="_blank" class="text-decoration-none">
+             🌐 Link
+             </a>
+            {% else %}
+    —
+            {% endif %}
+            </td>
+            </tr>
+          {% empty %}
+            <tr>
+              <td colspan="12" class="text-muted">Nessuna entrata registrata.</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Script: chiudi form se messaggio presente -->
+{% if messages %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('formEntrataMagazzino');
+    if (form.classList.contains('show')) {
+      new bootstrap.Collapse(form, { toggle: true });
+    }
+  });
+</script>
+{% endif %}
+
+<!-- Script: calcolo automatico prezzo totale -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const quantitaInput = document.getElementById('id_quantita');
+    const prezzoInput = document.getElementById('id_prezzo_con_iva');
+    const trasportoInput = document.getElementById('id_prezzo_trasporto');
+    const totaleInput = document.getElementById('id_prezzo_totale');
+
+    function calcolaTotale() {
+      const q = parseFloat(quantitaInput.value) || 0;
+      const p = parseFloat(prezzoInput.value.replace(',', '.')) || 0;
+      const t = parseFloat(trasportoInput.value.replace(',', '.')) || 0;
+      const totale = (q * p + t).toFixed(2);
+      totaleInput.value = totale;
+    }
+
+    quantitaInput.addEventListener('input', calcolaTotale);
+    prezzoInput.addEventListener('input', calcolaTotale);
+    trasportoInput.addEventListener('input', calcolaTotale);
+  });
+</script>
+
+<!-- Script: generazione automatica codice -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const codiceInput = document.getElementById('id_codice_arrivo');
+    const righe = document.querySelectorAll('tbody tr td:first-child');
+    let max = 0;
+
+    righe.forEach(td => {
+      let codice = td.textContent.trim();
+      if (/^\d{6}$/.test(codice)) {
+        let numero = parseInt(codice, 10);
+        if (numero > max) max = numero;
+      }
+    });
+
+    let nuovoCodice = (max + 1).toString().padStart(6, '0');
+    if (codiceInput && !codiceInput.value) {
+      codiceInput.value = nuovoCodice;
+    }
+  });
+</script>
+
+<!-- Script: aggiorna prezzo senza IVA -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const ivaInput = document.getElementById('ivaInput');
+    const colonnePrezzo = document.querySelectorAll('.prezzo-senza-iva');
+
+    function aggiornaPrezziSenzaIVA() {
+      let ivaPercentuale = parseFloat(ivaInput.value.replace(',', '.'));
+      if (isNaN(ivaPercentuale) || ivaPercentuale < 0) ivaPercentuale = 22;
+
+      colonnePrezzo.forEach(colonna => {
+        let prezzoLordo = parseFloat(colonna.dataset.prezzo.replace(',', '.'));
+        if (!isNaN(prezzoLordo)) {
+          let netto = prezzoLordo / (1 + (ivaPercentuale / 100));
+          colonna.innerText = `€ ${netto.toFixed(2).replace('.', ',')}`;
+        } else {
+          colonna.innerText = '—';
+        }
+      });
+    }
+
+    aggiornaPrezziSenzaIVA();
+    ivaInput.addEventListener('input', aggiornaPrezziSenzaIVA);
+  });
+</script>
+{% endblock %}

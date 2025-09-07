@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Conferma Eliminazione{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-8 col-lg-6">
+      <div class="card shadow border-danger">
+        <div class="card-body text-center">
+          <h2 class="text-danger mb-4">
+            <i class="fas fa-exclamation-triangle"></i> Conferma Eliminazione
+          </h2>
+
+          <p class="mb-4">Sei sicuro di voler eliminare <strong>{{ oggetto }}</strong>?<br>Questa azione è irreversibile.</p>
+
+          <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between">
+              <a href="{% url 'gestione_home' %}" class="btn btn-secondary">Annulla</a>
+              <button type="submit" class="btn btn-danger">Conferma Eliminazione</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

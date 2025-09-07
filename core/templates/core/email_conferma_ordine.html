@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { font-family: Arial, sans-serif; color: #333; }
+        h1 { color: #0066cc; }
+        .dati-ordine, .footer { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Grazie per il tuo ordine, {{ ordine.nome }}!</h1>
+
+    <p>Abbiamo ricevuto il tuo ordine <strong>#{{ ordine.codice_ordine|default:ordine.id }}</strong>.</p>
+
+    <div class="dati-ordine">
+        <p><strong>Totale:</strong> € {{ ordine.get_totale }}</p>
+        <p><strong>Data:</strong> {{ ordine.data_creazione|date:"d/m/Y H:i" }}</p>
+        <p><strong>Metodo di pagamento:</strong> {{ ordine.metodo_pagamento }}</p>
+    </div>
+
+    <p>Ti contatteremo a breve per la spedizione.</p>
+
+    <div class="footer">
+        <hr>
+        <p><strong>{{ brand.nome }}</strong><br>
+        {{ brand.indirizzo }}<br>
+        {{ brand.cap_citta }}<br>
+        P.IVA: {{ brand.partita_iva }}<br>
+        Email: {{ brand.email }}<br>
+        Tel: {{ brand.telefono }}</p>
+    </div>
+</body>
+</html>

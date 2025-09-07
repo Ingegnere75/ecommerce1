@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Prodotto non trovato{% endblock %}
+
+{% block content %}
+<div class="container text-center py-5">
+    <div class="mb-4">
+        <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+        </a>
+      </div>
+    <h1>Prodotto non trovato 😢</h1>
+    <p>Il prodotto con ID <strong>{{ id }}</strong> non è presente nel nostro catalogo.</p>
+    <a href="{% url 'prodotti' %}" class="btn btn-outline-primary mt-3">Torna ai prodotti</a>
+</div>
+{% endblock %}

@@ -1,0 +1,82 @@
+  {% extends 'base.html' %}
+{% load static widget_tweaks %}
+
+{% block title %}{{ titolo }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+  <h3 class="mb-4 text-primary">{{ titolo }}</h3>
+
+  <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+    {% csrf_token %}
+
+    {% for field in form %}
+      {% if field.name != 'font_titolo' and field.name != 'font_color' %}
+        <div class="mb-3">
+          <label class="form-label">{{ field.label }}</label>
+          {{ field|add_class:"form-control" }}
+          {% if field.help_text %}
+            <div class="form-text">{{ field.help_text }}</div>
+          {% endif %}
+        </div>
+      {% endif %}
+    {% endfor %}
+
+    <!-- Font del titolo -->
+    <div class="mb-4">
+      <label class="form-label">Font del Titolo</label>
+      <select name="font_titolo" id="font_titolo" class="form-select">
+        <option value="">-- Seleziona un font --</option>
+        {% for nome, codice in font %}
+          <option value="{{ codice }}" {% if form.font_titolo.value == codice %}selected{% endif %}>
+            {{ nome }}
+          </option>
+        {% endfor %}
+      </select>
+      <div class="form-text">Scegli un font per il titolo del banner</div>
+    </div>
+
+    <!-- Colore del testo -->
+    <div class="mb-4">
+      <label class="form-label">Colore del Testo (font_color)</label>
+      <input type="color" name="font_color" id="font_color" class="form-control form-control-color"
+             value="{{ form.font_color.value|default:'#000000' }}">
+      <div class="form-text">Scegli il colore del testo del banner</div>
+    </div>
+
+    <!-- Anteprima -->
+    <div class="mb-4">
+      <label class="form-label">Anteprima Font + Colore</label>
+      <div id="anteprima_font" class="p-3 border rounded bg-light text-center" style="font-size: 1.8rem;">
+        Testo di Anteprima
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">Salva</button>
+    <a href="{% url 'gestione_home' %}" class="btn btn-secondary">Annulla</a>
+  </form>
+</div>
+
+<script>
+  const fontSelect = document.getElementById("font_titolo");
+  const colorInput = document.getElementById("font_color");
+  const preview = document.getElementById("anteprima_font");
+
+  function aggiornaAnteprima() {
+    preview.style.fontFamily = fontSelect.value;
+    preview.style.color = colorInput.value;
+  }
+
+  fontSelect.addEventListener("change", aggiornaAnteprima);
+  colorInput.addEventListener("input", aggiornaAnteprima);
+
+  document.addEventListener("DOMContentLoaded", aggiornaAnteprima);
+</script>
+{% endblock %}
+

@@ -1,0 +1,227 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Sito in Manutenzione</title>
+    <link rel="stylesheet" href="{% static 'bootstrap5/css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa, #e0e0e0);
+        }
+        .admin-login {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            width: 250px;
+            font-size: 0.85rem;
+        }
+        .carousel-caption {
+            background-color: rgba(0,0,0,0.6);
+            border-radius: 10px;
+            padding: 10px;
+        }
+        .carousel-icon {
+            font-size: 60px;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container text-center py-5">
+    <h1 class="display-5 fw-bold text-primary">
+        <i class="fas fa-tools me-2"></i> Sito in Manutenzione
+    </h1>
+    <p class="lead mb-5">Stiamo lavorando per offrirti un'esperienza migliore!</p>
+
+    <!-- CAROUSEL DI ICONE -->
+    <div id="maintenanceCarousel" class="carousel slide" data-bs-ride="carousel" style="max-width: 600px; margin: auto;">
+        <div class="carousel-inner rounded shadow">
+
+            {% comment %} Prime 10 icone {% endcomment %}
+            <div class="carousel-item active">
+                <i class="fas fa-hard-hat carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Stiamo lavorando per la tua sicurezza</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-cogs carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Il sito sarà ancora più veloce</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-thumbs-up carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Presto online, meglio di prima</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-shield-alt carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Proteggiamo i tuoi dati</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-bolt carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Potenza raddoppiata, sicurezza triplicata</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-globe carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Un sito globale, al tuo servizio</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-server carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Server aggiornati per prestazioni massime</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-lightbulb carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Nuove idee stanno nascendo!</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-user-shield carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>La tua protezione è la nostra priorità</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-rocket carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Prepara il decollo: il meglio sta arrivando</h5>
+                </div>
+            </div>
+
+            {% comment %} Altre 10 icone {% endcomment %}
+            <div class="carousel-item">
+                <i class="fas fa-heart carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Creato con amore per te</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-sync-alt carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Aggiornamenti in corso</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-code carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Scrivendo codice per una nuova esperienza</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-network-wired carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Connettività migliorata</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-chart-line carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Performance in crescita continua</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-users carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Una community più forte</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-laptop-code carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Innovazione in corso...</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-comments carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Comunicazione migliorata per te</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-compass carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Nuove direzioni, stesso impegno</h5>
+                </div>
+            </div>
+
+            <div class="carousel-item">
+                <i class="fas fa-bug carousel-icon"></i>
+                <div class="carousel-caption">
+                    <h5>Risoluzione dei problemi in corso</h5>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- FORM LOGIN ADMIN -->
+<div class="admin-login text-muted">
+    <form method="post" action="{% url 'admin_login' %}" autocomplete="off">
+        {% csrf_token %}
+        <div class="form-floating mb-2">
+            <input type="text" name="username" id="admin-username" class="form-control form-control-sm" placeholder="Username" required>
+            <label for="admin-username">Username</label>
+        </div>
+        <div class="form-floating mb-2">
+            <input type="password" name="password" id="admin-password" class="form-control form-control-sm" placeholder="Password" required>
+            <label for="admin-password">Password</label>
+        </div>
+        <button type="submit" class="btn btn-sm btn-dark w-100">
+            <i class="fas fa-lock me-1"></i> Accesso Amministratore
+        </button>
+        {% if error %}
+        <div class="alert alert-danger mt-2 py-1 px-2">
+            {{ error }}
+        </div>
+        {% endif %}
+    </form>
+</div>
+</div>
+
+
+<script src="{% static 'bootstrap5/js/bootstrap.bundle.min.js' %}"></script>
+<script>
+  var carousel = document.querySelector('#maintenanceCarousel');
+  var carouselInstance = new bootstrap.Carousel(carousel, {
+    interval: 3000,
+    ride: 'carousel',
+    pause: false,
+    wrap: true
+  });
+</script>
+
+</body>
+</html>

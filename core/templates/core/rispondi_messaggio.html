@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}Rispondi al Messaggio{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+    </a>
+  </div>
+  <h2 class="mb-4">Rispondi a {{ messaggio.email }}</h2>
+
+  <div class="mb-3">
+    <strong>Oggetto:</strong> {{ messaggio.oggetto }}<br>
+    <strong>Messaggio ricevuto:</strong> {{ messaggio.messaggio }}
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="risposta">Risposta:</label>
+      <textarea name="risposta" class="form-control" rows="6" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Invia Risposta</button>
+    <a href="{% url 'admin-messaggi' %}" class="btn btn-secondary">Annulla</a>
+  </form>
+</div>
+{% endblock %}

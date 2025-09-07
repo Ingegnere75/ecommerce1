@@ -1,0 +1,17 @@
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Richiesta Inviata</title>
+    <link href="{% static 'kaira/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+<section class="container py-5 text-center">
+    <h2 class="mb-4">Richiesta inviata con successo!</h2>
+    <p class="lead">Abbiamo ricevuto la tua richiesta. Ti risponderemo il prima possibile.</p>
+    <a href="/richieste/salva-richiesta/" class="btn btn-success mt-3">Invia un'altra richiesta</a>
+</section>
+</body>
+</html>

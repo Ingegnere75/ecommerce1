@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+  {% if not brand.attivo %}
+    <div class="alert alert-warning text-center" role="alert">
+      ⚠️ Il brand non è attivo e non verrà mostrato nel sito pubblico.
+    </div>
+  {% endif %}
+
+  <div class="text-center mb-5">
+    <h1 class="fw-bold text-uppercase" style="font-family: '{{ brand.font_brand }}'; color: {{ brand.colore_testo }};">
+      {{ brand.nome }}
+    </h1>
+    {% if brand.link %}
+      <a href="{{ brand.link }}" target="_blank" class="btn btn-outline-dark btn-sm mt-2">
+        <i class="fas fa-globe me-1"></i> Vai al sito ufficiale
+      </a>
+    {% endif %}
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {% if brand.descrizione %}
+        <p class="fs-5 text-center">{{ brand.descrizione }}</p>
+      {% endif %}
+
+      <div class="text-center mt-4">
+        <div class="d-flex justify-content-center gap-4 fs-3">
+          {% if brand.facebook %}
+            <a href="{{ brand.facebook }}" class="text-primary" target="_blank"><i class="fab fa-facebook-square"></i></a>
+          {% endif %}
+          {% if brand.twitter %}
+            <a href="{{ brand.twitter }}" class="text-info" target="_blank"><i class="fab fa-twitter-square"></i></a>
+          {% endif %}
+          {% if brand.instagram %}
+            <a href="{{ brand.instagram }}" class="text-danger" target="_blank"><i class="fab fa-instagram-square"></i></a>
+          {% endif %}
+          {% if brand.youtube %}
+            <a href="{{ brand.youtube }}" class="text-danger" target="_blank"><i class="fab fa-youtube-square"></i></a>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="text-center mt-5">
+        <a href="{% url 'modifica_brand' brand.id %}" class="btn btn-primary">
+          ✏️ Modifica Brand
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

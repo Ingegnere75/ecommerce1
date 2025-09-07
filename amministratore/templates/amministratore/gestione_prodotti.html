@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load admin_urls %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-warning fw-bold">🛒 Gestione Prodotti Suggeriti</h2>
+    <a href="{% url 'admin:blog_prodottosuggerito_add' %}" class="btn btn-warning rounded-pill">➕ Nuovo Prodotto</a>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle text-center">
+          <thead class="table-warning">
+            <tr>
+              <th>Titolo</th>
+              <th>Autore</th>
+              <th>Link</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in prodotti %}
+              <tr>
+                <td>{{ p.titolo }}</td>
+                <td>{{ p.autore.username }}</td>
+                <td>
+                  {% if p.link %}
+                    <a href="{{ p.link }}" target="_blank" title="Vai al sito">🔗</a>
+                  {% else %}
+                    <span class="text-muted">Nessun link</span>
+                  {% endif %}
+                </td>
+                <td>
+                  <a href="{% url 'admin:blog_prodottosuggerito_change' p.id %}" class="btn btn-warning btn-sm rounded-circle" title="Modifica">✏️</a>
+                  <a href="{% url 'admin:blog_prodottosuggerito_delete' p.id %}" class="btn btn-danger btn-sm rounded-circle" title="Elimina"
+                     onclick="return confirm('Eliminare questo prodotto suggerito?');">🗑</a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4">Nessun prodotto suggerito trovato.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="text-end">
+        <a href="{% url 'gestore-blog' %}" class="btn btn-outline-secondary rounded-pill">↩ Torna al Pannello Blog</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

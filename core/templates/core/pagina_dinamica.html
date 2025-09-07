@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ pagina.titolo }}{% endblock %}
+{% block content %}
+
+<style>
+  .btn-home {
+    position: fixed;
+    top: 200px;
+    left: 20px;
+    z-index: 999;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-weight: 500;
+    background: linear-gradient(to right, #4e54c8, #8f94fb);
+    color: white;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    transition: 0.3s ease;
+  }
+
+  .btn-home:hover {
+    background: linear-gradient(to right, #3a3dc1, #767cf5);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  .pagina-img {
+    display: block;
+    margin: 0 auto 30px auto;
+    width: 100%;
+    max-width: 1000px;
+    height: 350px;
+    object-fit: cover;
+    border-radius: 16px;
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+  }
+
+  .pagina-img:hover {
+    transform: scale(1.015);
+  }
+
+  .pagina-contenuto {
+    padding: 35px;
+    background: #ffffff;
+    border-radius: 16px;
+    font-size: 1.125rem;
+    line-height: 1.9;
+    color: #444;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+    backdrop-filter: blur(2px);
+  }
+
+  .video-frame {
+    border-radius: 16px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  }
+
+  .document-box {
+    background: #f0f3ff;
+    border-left: 6px solid #4e54c8;
+    border-radius: 12px;
+    padding: 18px 24px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1rem;
+    box-shadow: 0 5px 18px rgba(0, 0, 0, 0.05);
+  }
+
+  .document-box a {
+    border-radius: 20px;
+  }
+
+  @media (max-width: 768px) {
+    .pagina-img {
+      height: 250px;
+    }
+    .pagina-contenuto {
+      padding: 20px;
+    }
+    .document-box {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .btn-home {
+      top: 70px;
+      left: 10px;
+      padding: 8px 16px;
+    }
+  }
+</style>
+
+<!-- Bottone Torna alla Home -->
+<a href="{% url 'home' %}" class="btn-home animate__animated animate__fadeInLeft">
+  ← Torna alla Home
+</a>
+
+<!-- Sezione Contenuto -->
+<section class="py-5" style="background: linear-gradient(135deg, #f5f7ff, #e2e6f5);">
+  <div class="container">
+    <div class="row justify-content-center">
+      <div class="col-lg-10">
+
+        <!-- Titolo -->
+        <h1 class="fw-bold text-center text-gradient display-4 mb-5 animate__animated animate__fadeInDown"
+            style="background: linear-gradient(to right, #4e54c8, #8f94fb); -webkit-background-clip: text; color: transparent;">
+          {{ pagina.titolo }}
+        </h1>
+
+        <!-- Immagine -->
+        {% if pagina.immagine %}
+        <div class="text-center mb-5 animate__animated animate__zoomIn">
+          <img src="{{ pagina.immagine.url }}" alt="{{ pagina.titolo }}" class="pagina-img">
+        </div>
+        {% endif %}
+
+        <!-- Video -->
+        {% if pagina.video %}
+        <div class="ratio ratio-16x9 mb-5 animate__animated animate__fadeIn">
+          <iframe src="{{ pagina.video }}" title="Video" allowfullscreen class="video-frame w-100"></iframe>
+        </div>
+        {% endif %}
+
+        <!-- PDF -->
+        {% if pagina.pdf %}
+        <div class="document-box mb-5 animate__animated animate__fadeIn">
+          <div>
+            📄 <strong>{{ pagina.pdf.name|cut:"pagine/pdf/" }}</strong>
+          </div>
+          <a href="{{ pagina.pdf.url }}" class="btn btn-outline-primary btn-sm" target="_blank">
+            Apri PDF
+          </a>
+        </div>
+        {% endif %}
+
+        <!-- Contenuto Testuale -->
+        <div class="pagina-contenuto animate__animated animate__fadeInUp">
+          {{ pagina.contenuto_testo|safe }}
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

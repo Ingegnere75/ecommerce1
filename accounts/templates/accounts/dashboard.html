@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load custom_filters %}
+{% block content %}
+<div class="container mt-5">
+  <h2 class="mb-5 text-center fw-bold">Benvenuto nella tua Dashboard, {{ user.first_name }}</h2>
+
+  <div class="row g-4">
+
+    <!-- Profilo -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <i class="fas fa-user fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Profilo</h5>
+          <p class="card-text">Visualizza e modifica i tuoi dati personali.</p>
+          <a href="{% url 'profilo' %}" class="btn btn-info w-100">Vai al Profilo</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reclami -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <i class="fas fa-exclamation-circle fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Reclami</h5>
+          <p class="card-text">Hai un problema con un ordine? Invia un reclamo.</p>
+          <a href="{% url 'reclami' %}" class="btn btn-info w-100">Invia Reclamo</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <i class="fas fa-ticket-alt fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Ticket</h5>
+          <p class="card-text">Controlla i tuoi ticket generati dai reclami.</p>
+          <a href="{% url 'consulta_reclami' %}" class="btn btn-info w-100">Consulta Ticket</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- I miei ordini -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <i class="fas fa-box fa-3x text-info mb-3"></i>
+          <h5 class="card-title">I miei Ordini</h5>
+          <p class="card-text">Visualizza lo storico dei tuoi ordini effettuati sul nostro sito.</p>
+          <a href="{% url 'miei_ordini' %}" class="btn btn-info w-100">Vai agli Ordini</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Wishlist -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body d-flex flex-column justify-content-between">
+          <i class="fas fa-heart fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Wishlist</h5>
+          <p class="card-text">Visualizza i tuoi prodotti preferiti e aggiungili al carrello in un click.</p>
+          <a href="{% url 'mia_wishlist' %}" class="btn btn-info w-100">Vai alla Wishlist</a>
+        </div>
+      </div>
+    </div>
+
+    
+   <div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body d-flex flex-column justify-content-between">
+      <i class="fas fa-cookie-bite fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Sconti</h5>
+      <p class="card-text">Visualizza i codici di sconto.</p>
+      <a href="{% url 'lista_sconti' %}" class="btn btn-info w-100">Visualizza codici Sconto</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

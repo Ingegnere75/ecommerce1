@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ categoria.nome }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+    </a>
+  </div>
+
+  <h1 class="text-center text-uppercase">{{ categoria.nome }}</h1>
+
+  <!-- Mostra sconto se presente -->
+  {% include 'includes/sconto_categoria.html' with categoria=categoria %}
+
+  <h3 class="mt-4">Sottocategorie</h3>
+  <ul>
+    {% for sottocat in sottocategorie %}
+      <li>
+        {{ sottocat.nome }}
+        {% if sottocat.is_sconto %}
+          <span class="text-success fw-bold">– Sconto del {{ sottocat.percentuale_sconto }}%</span>
+        {% endif %}
+      </li>
+    {% empty %}
+      <li>Nessuna sottocategoria disponibile.</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endblock %}

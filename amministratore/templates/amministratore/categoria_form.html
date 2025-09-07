@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}{{ titolo }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h2 class="mb-4 text-primary">{{ titolo }}</h2>
+  <form method="post" enctype="multipart/form-data" class="bg-white shadow p-4 rounded-3">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit" class="btn btn-primary">
+      <i class="fas fa-save me-1"></i> Salva
+    </button>
+    <a href="{% url 'categorie_list' %}" class="btn btn-secondary">Annulla</a>
+  </form>
+</div>
+{% endblock %}

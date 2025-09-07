@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h2 class="text-danger">Conferma Rimozione</h2>
+    <p>Sei sicuro di voler eliminare la pagina <strong>"{{ pagina.titolo }}"</strong>?</p>
+    <form method="POST">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Sì, Elimina</button>
+        <a href="{% url 'lista_pagine' %}" class="btn btn-secondary">Annulla</a>
+    </form>
+</div>
+{% endblock %}

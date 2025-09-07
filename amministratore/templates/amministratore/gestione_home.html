@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Gestione Home{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h2 class="mb-4 text-primary fw-bold">Gestione Home Page</h2>
+
+  <!-- SEZIONE CARDS -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Cards</h5>
+      <a href="{% url 'aggiungi_card' %}" class="btn btn-sm btn-success">+ Aggiungi Card</a>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Immagine</th>
+            <th>Titolo</th>
+            <th>Descrizione</th>
+            <th>Link</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for card in cards %}
+          <tr>
+            <td>
+              {% if card.immagine %}
+                <img src="{{ card.immagine.url }}" style="height: 50px;" class="rounded shadow-sm">
+              {% else %}
+                <span class="text-muted">Nessuna</span>
+              {% endif %}
+            </td>
+            <td>{{ card.titolo }}</td>
+            <td>{{ card.descrizione }}</td>
+            <td>
+              <a href="{{ card.get_link }}" target="_blank" class="btn btn-outline-primary btn-sm">Vai</a>
+            </td>
+            <td>
+              <a href="{% url 'modifica_card' card.id %}" class="btn btn-outline-secondary btn-sm">Modifica</a>
+              <a href="{% url 'elimina_card' card.id %}" class="btn btn-outline-danger btn-sm">Elimina</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="5" class="text-center text-muted">Nessuna card presente.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SEZIONE BANNERS -->
+  <div class="card shadow-sm mb-5">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Banners</h5>
+      <a href="{% url 'aggiungi_banner' %}" class="btn btn-sm btn-success">+ Aggiungi Banner</a>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Titolo</th>
+            <th>Immagine</th>
+            <th>Video</th>
+            <th>Dimensioni</th>
+            <th>Posizione</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for banner in banners %}
+          <tr>
+            <td>{{ banner.titolo }}</td>
+            <td>
+              {% if banner.immagine %}
+                <img src="{{ banner.immagine.url }}" style="height: 50px;" class="rounded shadow-sm">
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if banner.video %}
+                <video src="{{ banner.video.url }}" height="40" controls></video>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>{{ banner.larghezza }}x{{ banner.altezza }}</td>
+            <td>{{ banner.get_posizione_display }}</td>
+            <td>
+              <a href="{% url 'modifica_banner' banner.id %}" class="btn btn-outline-secondary btn-sm">Modifica</a>
+              <a href="{% url 'elimina_banner' banner.id %}" class="btn btn-outline-danger btn-sm">Elimina</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="text-center text-muted">Nessun banner presente.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- SEZIONE ELEMENTI EXTRA -->
+  <div class="card shadow-sm">
+    <div class="card-header bg-light d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Elementi Extra</h5>
+      <a href="{% url 'aggiungi_elemento' %}" class="btn btn-sm btn-success">+ Aggiungi Elemento</a>
+    </div>
+    <div class="card-body p-0">
+      <table class="table table-hover align-middle mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Zona</th>
+            <th>Tipo</th>
+            <th>Titolo</th>
+            <th>Testo</th>
+            <th>Media</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for elem in elementi %}
+          <tr>
+            <td>{{ elem.zona }}</td>
+            <td>{{ elem.tipo }}</td>
+            <td>{{ elem.titolo }}</td>
+            <td>{{ elem.contenuto_testo|truncatechars:40 }}</td>
+            <td>
+              {% if elem.immagine %}
+                <img src="{{ elem.immagine.url }}" class="img-fluid rounded" style="height: 40px;">
+              {% elif elem.video %}
+                <video src="{{ elem.video.url }}" height="40" muted autoplay loop></video>
+              {% else %}
+                <span class="text-muted">—</span>
+              {% endif %}
+            </td>
+            <td>
+              <a href="{% url 'modifica_elemento' elem.id %}" class="btn btn-outline-primary btn-sm">Modifica</a>
+              <a href="{% url 'elimina_elemento' elem.id %}" class="btn btn-outline-danger btn-sm">Elimina</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr><td colspan="6" class="text-center text-muted">Nessun elemento extra presente.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

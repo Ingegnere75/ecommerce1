@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Gestione Pagine - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h1 class="fw-bold text-center mb-4">Gestione Pagine del Sito</h1>
+
+    <div class="text-end mb-3">
+        <a href="{% url 'crea-pagina' %}" class="btn btn-success">
+            <i class="fas fa-plus"></i> Crea nuova pagina
+        </a>
+    </div>
+
+    <div class="table-responsive shadow-sm">
+        <table class="table table-hover align-middle">
+            <thead class="table-primary">
+                <tr>
+                    <th>Titolo</th>
+                    <th>URL</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for pagina in pagine %}
+                <tr>
+                    <td>{{ pagina.titolo }}</td>
+                    <td>{{ pagina.url }}</td>
+                    <td>
+                        <a href="{% url 'modifica-pagina' pagina.id %}" class="btn btn-sm btn-warning me-1">
+                            <i class="fas fa-edit"></i> Modifica
+                        </a>
+                        <a href="{% url 'cancella-pagina' pagina.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Sei sicuro di voler cancellare questa pagina?');">
+                            <i class="fas fa-trash-alt"></i> Cancella
+                        </a>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="3" class="text-center">Nessuna pagina disponibile.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

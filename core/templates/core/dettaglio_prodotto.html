@@ -1,0 +1,270 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ prodotto.nome }} - Dettaglio{% endblock %}
+
+{% block content %}
+<style>
+  .img-hover {
+    transition: all 0.4s ease-in-out;
+    filter: brightness(1.05) contrast(1.1);
+    object-fit: cover;
+  }
+  .img-hover:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  }
+
+  .color-swatch {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    transition: transform 0.2s ease;
+    display: inline-block;
+  }
+  .color-swatch:hover {
+    transform: scale(1.2);
+    border-color: #000;
+  }
+
+  .btn-cart, .btn-success {
+    background: linear-gradient(135deg, #00c9a7, #92fe9d);
+    color: #fff;
+    border: none;
+    font-weight: 600;
+  }
+  .btn-cart:hover, .btn-success:hover {
+    background: linear-gradient(135deg, #92fe9d, #00c9a7);
+    transform: scale(1.05);
+  }
+
+  .wishlist-btn {
+    background: transparent;
+    border: none;
+    font-size: 1.6rem;
+    transition: 0.3s;
+    color: green;
+  }
+  .wishlist-btn.active {
+    color: red;
+  }
+
+  .btn-back {
+    background: linear-gradient(45deg, #00c9ff, #92fe9d);
+    border: none;
+    color: #fff;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+  }
+  .btn-back:hover {
+    background: linear-gradient(45deg, #92fe9d, #00c9ff);
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .descrizione-card {
+    overflow: hidden;
+    background: #fdfdfd;
+  }
+
+  .media-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 24px;
+    margin-top: 60px;
+  }
+
+  .media-section > * {
+    flex: 0 1 auto;
+  }
+
+  .prezzo-box {
+    border: 2px solid #28a745;
+    background-color: #f8fdf9;
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    max-width: 320px;
+    margin: 20px auto;
+  }
+  .prezzo-box .original {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 1rem;
+  }
+  .prezzo-box .scontato {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #28a745;
+  }
+  .prezzo-box .intero {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #000;
+  }
+
+  @keyframes slowBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  @keyframes fastBeat {
+    0%, 100% { transform: scale(1); }
+    25% { transform: scale(1.3); }
+    50% { transform: scale(0.9); }
+    75% { transform: scale(1.2); }
+  }
+
+  #heart-icon {
+    animation: slowBeat 2.5s infinite ease-in-out;
+    transition: color 0.4s, transform 0.3s;
+  }
+
+  .wishlist-btn.active #heart-icon {
+    color: red !important;
+  }
+
+  .wishlist-btn.fast #heart-icon {
+    animation: fastBeat 0.6s infinite ease-in-out !important;
+  }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn-back">← Torna alla pagina precedente</a>
+
+  {% if user.is_authenticated %}
+    <button id="wishlist-btn" class="wishlist-btn {% if prodotto in user.wishlist_items.all %}active{% endif %}" onclick="toggleWishlist({{ prodotto.id }})">
+      <i id="heart-icon" class="fas fa-heart"></i>
+    </button>
+  {% else %}
+    <button class="wishlist-btn" onclick="alert('Effettua il login per usare la wishlist');">
+      <i class="fas fa-heart text-secondary"></i>
+    </button>
+  {% endif %}
+</div>
+
+<div class="row g-5 align-items-start">
+  <div class="col-lg-6">
+    <img src="{{ prodotto.immagine.url }}" class="img-hover rounded w-100 shadow" style="height:{{ prodotto.altezza }}px;">
+  </div>
+  <div class="col-lg-6">
+    <h2 class="fw-bold">{{ prodotto.nome }}</h2>
+
+    <div class="prezzo-box">
+      {% if prodotto.prezzo_scontato and prodotto.prezzo_scontato < prodotto.prezzo %}
+        <div class="original">€ {{ prodotto.prezzo|floatformat:2 }}</div>
+        <div class="scontato">€ {{ prodotto.prezzo_scontato|floatformat:2 }}</div>
+      {% else %}
+        <div class="intero">€ {{ prodotto.prezzo|floatformat:2 }}</div>
+      {% endif %}
+
+      {% if prodotto.sottocategoria and prodotto.sottocategoria.is_sconto %}
+        <div class="badge bg-success text-white mt-2">
+          Sconto del {{ prodotto.sottocategoria.percentuale_sconto }}%
+        </div>
+      {% elif prodotto.categoria and prodotto.categoria.is_sconto %}
+        <div class="badge bg-success text-white mt-2">
+          Sconto del {{ prodotto.categoria.percentuale_sconto }}%
+        </div>
+      {% endif %}
+    </div>
+
+    <p class="text-muted mt-2">{{ prodotto.descrizione }}</p>
+    <p><strong>Codice:</strong> {{ prodotto.codice_prodotto }} | <strong>Magazzino:</strong> {{ prodotto.codice_magazzino }}</p>
+    <p><strong>Disponibilità:</strong> {{ prodotto.disponibilita }}</p>
+
+    {% if colori %}
+      <p><strong>Colorazioni:</strong></p>
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        {% for colore in colori %}
+          <span class="color-swatch" style="background-color: {{ colore }};" title="{{ colore }}"></span>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    {% if prodotto.taglia or prodotto.misura %}
+      <div class="row g-2 mb-3">
+        {% if prodotto.taglia %}
+          <div class="col-md-6"><p><strong>Taglia:</strong> {{ prodotto.get_taglia_display }}</p></div>
+        {% endif %}
+        {% if prodotto.misura %}
+          <div class="col-md-6"><p><strong>Misura:</strong> {{ prodotto.get_misura_display }}</p></div>
+        {% endif %}
+      </div>
+    {% endif %}
+
+    <form method="post" action="{% url 'aggiungi_al_carrello' prodotto.pk %}">
+      {% csrf_token %}
+      <div class="input-group mb-4" style="max-width: 200px;">
+        <input type="number" name="quantita" class="form-control form-control-sm border-success shadow-sm" min="1" max="{{ prodotto.disponibilita }}" value="1" required>
+        <button type="submit" class="btn btn-cart btn-sm shadow-sm">
+          <i class="fas fa-cart-plus me-1"></i> Aggiungi
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div class="media-section">
+  {% for img in immagini_extra %}
+    <img src="{{ img.src }}" class="img-hover" style="height:{{ img.alt }}px; width:{{ img.lar }}px;">
+  {% endfor %}
+
+  {% for vid in video_extra %}
+    <video controls style="height:{{ vid.alt }}px; width:{{ vid.lar }}px;">
+      <source src="{{ vid.src }}">
+      Il tuo browser non supporta il video.
+    </video>
+  {% endfor %}
+
+  {% for desc in immagini_extra %}
+    {% if desc.descrizione %}
+      <div class="descrizione-card p-3 border shadow-sm rounded" style="height:{{ desc.altezza_descrizione }}px; width:{{ desc.larghezza_descrizione }}px;">
+        {{ desc.descrizione }}
+      </div>
+    {% endif %}
+  {% endfor %}
+
+  {% if testo_aggiuntivo %}
+    <div class="descrizione-card p-4 bg-light rounded shadow-sm" style="height:{{ altezza_testo }}px; width:{{ larghezza_testo }}px;">
+      <strong>Informazioni aggiuntive:</strong><br>
+      {{ testo_aggiuntivo }}
+    </div>
+  {% endif %}
+
+  {% if documento %}
+    <div style="min-width: 250px;">
+      <a href="{{ documento.url }}" class="btn btn-outline-success rounded-pill shadow-sm" download>
+        📄 Scarica documento allegato
+      </a>
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  function toggleWishlist(productId) {
+    fetch("{% url 'toggle_wishlist' 0 %}".replace("0", productId), {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': '{{ csrf_token }}',
+        'Content-Type': 'application/json'
+      }
+    })
+    .then(res => res.json())
+    .then(data => {
+      const btn = document.getElementById("wishlist-btn");
+      const icon = document.getElementById("heart-icon");
+      if (data.added) {
+        btn.classList.add("active", "fast");
+        setTimeout(() => btn.classList.remove("fast"), 1000);
+        icon.classList.add("text-danger");
+      } else {
+        btn.classList.remove("active");
+        icon.classList.remove("text-danger");
+      }
+    })
+    .catch(error => console.error("Errore AJAX:", error));
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Raccolta Dati{% endblock %}
+
+{% block content %}
+<section class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h1 class="text-center fw-bold mb-5">Dashboard Raccolta Dati</h1>
+
+  <div class="row g-5">
+    <!-- Card Contenuti -->
+    <div class="col-12 col-md-4">
+      <div class="card card-custom text-center shadow-sm mb-4">
+        <div class="card-body py-4">
+          <h5 class="card-title mb-3 text-primary">Contenuti</h5>
+          <p class="display-5 fw-bold">{{ contenuti.count }}</p>
+          <a href="{% url 'contenuti-lista' %}" class="btn btn-outline-primary btn-sm mt-2 w-75">Vai ai Contenuti</a>
+        </div>
+      </div>
+
+      <div class="table-container mt-2">
+        <h6 class="fw-bold mb-3 text-primary">Lista Contenuti</h6>
+        <table class="table table-sm table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Titolo</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for content in contenuti %}
+            <tr>
+              <td><span class="text-truncate-ellipsis">{{ content.titolo }}</span></td>
+              <td><span class="text-truncate-ellipsis">{{ content.data }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Card Richieste -->
+    <div class="col-12 col-md-4">
+      <div class="card card-custom text-center shadow-sm mb-4">
+        <div class="card-body py-4">
+          <h5 class="card-title mb-3 text-success">Richieste</h5>
+          <p class="display-5 fw-bold">{{ richieste.count }}</p>
+          <a href="{% url 'richieste-lista' %}" class="btn btn-outline-success btn-sm mt-2 w-75">Vai alle Richieste</a>
+        </div>
+      </div>
+
+      <div class="table-container mt-2">
+        <h6 class="fw-bold mb-3 text-success">Lista Richieste</h6>
+        <table class="table table-sm table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Richiesta</th>
+              <th>Email</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for req in richieste %}
+            <tr>
+              <td><span class="text-truncate-ellipsis">{{ req.richiesta }}</span></td>
+              <td><span class="text-truncate-ellipsis">{{ req.email_utente }}</span></td>
+              <td><span class="text-truncate-ellipsis">{{ req.data_richiesta|date:"d/m/Y H:i" }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Card Log -->
+    <div class="col-12 col-md-4">
+      <div class="card card-custom text-center shadow-sm mb-4">
+        <div class="card-body py-4">
+          <h5 class="card-title mb-3 text-warning">Log</h5>
+          <p class="display-5 fw-bold">{{ log_entries.count }}</p>
+          <a href="{% url 'log-lista' %}" class="btn btn-outline-warning btn-sm mt-2 w-75">Vai ai Log</a>
+        </div>
+      </div>
+
+      <div class="table-container mt-2">
+        <h6 class="fw-bold mb-3 text-warning">Lista Log</h6>
+        <table class="table table-sm table-hover align-middle">
+          <thead class="table-light">
+            <tr>
+              <th>Azione</th>
+              <th>Utente</th>
+              <th>Data</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in log_entries %}
+            <tr>
+              <td><span class="text-truncate-ellipsis">{{ log.azione }}</span></td>
+              <td><span class="text-truncate-ellipsis">{{ log.utente }}</span></td>
+              <td><span class="text-truncate-ellipsis">{{ log.data }}</span></td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+  body {
+    background-color: #f8f9fa;
+  }
+  .card-custom {
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    min-height: 230px;
+  }
+  .card-custom:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  }
+  .table-container {
+    background: #ffffff;
+    border-radius: 0.75rem;
+    padding: 1rem;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+    min-height: 300px; /* meno alta, più elegante */
+  }
+  .text-truncate-ellipsis {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    display: inline-block;
+    max-width: 180px;
+  }
+  .table th, .table td {
+    vertical-align: middle;
+  }
+</style>
+{% endblock %}

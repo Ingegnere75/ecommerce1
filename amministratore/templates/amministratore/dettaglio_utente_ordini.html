@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h2 class="mb-4 fw-bold text-primary">🧑 Dettaglio Utente: {{ utente.nome }} {{ utente.cognome }}</h2>
+
+    <p><strong>Indirizzo:</strong> {{ utente.indirizzo }} {{ utente.civico }}, {{ utente.cap }} {{ utente.citta }} ({{ utente.provincia }})</p>
+    <p><strong>Email:</strong> {{ utente.email }}</p>
+    <p><strong>Telefono:</strong> {{ utente.telefono }}</p>
+
+    <hr class="my-4">
+
+    <h4 class="fw-bold text-dark mb-3">📦 Ordini dell’utente</h4>
+
+    {% for ordine in ordini_utente %}
+    <div class="card mb-4 shadow-sm">
+        <div class="card-header bg-light fw-bold">
+            Ordine #{{ ordine.id }} - {{ ordine.data_creazione|date:"d/m/Y H:i" }} - Stato: {{ ordine.get_stato_display }}
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-bordered text-center align-middle">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Prodotto</th>
+                            <th>Prezzo unitario</th>
+                            <th>Quantità</th>
+                            <th>Totale riga</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in ordine.ordineitem_set.all %}
+                        <tr>
+                            <td>{{ item.prodotto.nome }}</td>
+                            <td>€ {{ item.prodotto.prezzo|floatformat:2 }}</td>
+                            <td>{{ item.quantita }}</td>
+                            <td class="fw-bold text-success">
+                                € {{ item.prodotto.prezzo|mul:item.quantita|floatformat:2 }}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                    <tfoot class="table-primary">
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Totale:</td>
+                            <td class="fw-bold text-primary">€ {{ ordine.get_totale|floatformat:2 }}</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="alert alert-warning">Nessun ordine disponibile per questo utente.</div>
+    {% endfor %}
+
+    <a href="{% url 'admin-magazzino' %}" class="btn btn-outline-secondary mt-3">
+        <i class="fas fa-arrow-left me-1"></i> Torna al Magazzino
+    </a>
+</div>
+{% endblock %}

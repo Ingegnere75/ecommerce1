@@ -1,0 +1,98 @@
+  {% extends 'base.html' %}
+  {% load crispy_forms_tags %}
+
+{% block title %}Modifica Profilo{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card border-0 shadow rounded-4">
+        <div class="card-header bg-primary text-white text-center rounded-top-4">
+          <h4 class="mb-0 py-2">👤 Modifica il tuo Profilo</h4>
+        </div>
+
+        <div class="card-body px-5 py-4 bg-light">
+          <form method="POST" novalidate>
+            {% csrf_token %}
+            <div class="row g-3">
+
+              <!-- Sezione Dati Personali -->
+              <h5 class="text-primary fw-bold mb-2">📌 Dati Personali</h5>
+
+              <div class="col-md-6">
+                <label class="form-label"></label>
+                {{ form.nome|as_crispy_field }}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label"></label>
+                {{ form.cognome|as_crispy_field }}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label"></label>
+                {{ form.codice_fiscale|as_crispy_field }}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label"></label>
+                <input type="email" value="{{ request.user.email }}" class="form-control" disabled>
+              </div>
+
+              <!-- Sezione Indirizzo -->
+              <h5 class="text-primary fw-bold mt-4 mb-2">🏠 Indirizzo</h5>
+
+              <div class="col-md-6">
+                <label class="form-label"></label>
+                {{ form.indirizzo|as_crispy_field }}
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label"></label>
+                {{ form.civico|as_crispy_field }}
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label"></label>
+                {{ form.cap|as_crispy_field }}
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label"></label>
+                {{ form.citta|as_crispy_field }}
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label"></label>
+                {{ form.provincia|as_crispy_field }}
+              </div>
+
+              <!-- Contatto -->
+              <h5 class="text-primary fw-bold mt-4 mb-2">📞 Contatto</h5>
+
+              <div class="col-md-6">
+                <label class="form-label"></label>
+                {{ form.telefono|as_crispy_field }}
+              </div>
+
+            </div>
+
+            <div class="d-grid mt-4">
+              <button type="submit" class="btn btn-success btn-lg rounded-pill">
+                💾 Salva modifiche
+              </button>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

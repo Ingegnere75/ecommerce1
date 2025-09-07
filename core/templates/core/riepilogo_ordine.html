@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Riepilogo Ordine{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+    </a>
+  </div>
+
+  <h2 class="text-center fw-bold mb-2 display-5 text-primary">🧾 Riepilogo Ordine</h2>
+  <p class="text-center text-muted mb-5">
+    Ordine <strong>#{{ ordine.id }}</strong> – Codice: <strong>{{ ordine.codice_ordine }}</strong>
+  </p>
+
+  <div class="card shadow-lg p-5 rounded-4 border-0 bg-light">
+    <div class="card-body">
+
+      <!-- Dati Cliente -->
+      <h5 class="fw-bold mb-3 text-primary">👤 Dati Cliente</h5>
+      <div class="row mb-4">
+        <div class="col-md-6">
+          <p><strong>Nome:</strong> {{ ordine.nome }}</p>
+          <p><strong>Cognome:</strong> {{ ordine.cognome }}</p>
+          <p><strong>Telefono:</strong> {{ ordine.telefono }}</p>
+        </div>
+        <div class="col-md-6">
+          <p><strong>Email:</strong> {{ ordine.email }}</p>
+          <p><strong>Codice Fiscale:</strong> {{ ordine.codice_fiscale }}</p>
+        </div>
+        <div class="col-md-12">
+          <p><strong>Indirizzo di Spedizione:</strong> {{ ordine.indirizzo }}, {{ ordine.civico }} - {{ ordine.cap }} {{ ordine.citta }} ({{ ordine.provincia }})</p>
+        </div>
+      </div>
+
+      {% if ordine.fatturazione_diversa %}
+        <h5 class="fw-bold mb-3 text-primary">🧾 Dati di Fatturazione</h5>
+        <div class="row mb-4">
+          <div class="col-md-6">
+            <p><strong>Nome:</strong> {{ ordine.nome_fatt }}</p>
+            <p><strong>Cognome:</strong> {{ ordine.cognome_fatt }}</p>
+          </div>
+          <div class="col-md-6">
+            <p><strong>Indirizzo:</strong> {{ ordine.indirizzo_fatt }}, {{ ordine.civico_fatt }} - {{ ordine.cap_fatt }} {{ ordine.citta_fatt }} ({{ ordine.provincia_fatt }})</p>
+          </div>
+        </div>
+      {% endif %}
+
+      <!-- Lista Prodotti -->
+      <h4 class="mb-4 fw-bold text-secondary">📦 I tuoi articoli</h4>
+      <ul class="list-group mb-4">
+        {% for item in articoli %}
+          <li class="list-group-item d-flex justify-content-between align-items-center py-3 rounded-4 shadow-sm mb-3 border-0">
+            <div class="d-flex align-items-center gap-3">
+              {% if item.prodotto.immagine %}
+                <img src="{{ item.prodotto.immagine.url }}" alt="{{ item.prodotto.nome }}" class="img-fluid rounded-3" style="width: 70px; height: 70px; object-fit: cover;">
+              {% else %}
+                <img src="{% static 'img/no-image.png' %}" alt="No image" class="img-fluid rounded-3" style="width: 70px; height: 70px; object-fit: cover;">
+              {% endif %}
+              <div>
+                <div class="fw-bold">{{ item.prodotto.nome }}</div>
+                <div class="text-muted small">Quantità: {{ item.quantita }}</div>
+              </div>
+            </div>
+            <div class="fw-bold fs-5">€ {{ item.get_subtotale|floatformat:2 }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+
+      <!-- Totali -->
+      <div class="bg-white p-4 rounded-4 shadow-sm">
+        <h5 class="fw-bold text-primary mb-4">🧾 Riepilogo Totale</h5>
+        <ul class="list-group list-group-flush mb-4">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Subtotale prodotti</span>
+            <span>€ {{ totale_prodotti|floatformat:2 }}</span>
+          </li>
+          {% if sconto %}
+            <li class="list-group-item d-flex justify-content-between text-success">
+              <span>Sconto ({{ sconto_percentuale }}%)</span>
+              <span>- € {{ sconto|floatformat:2 }}</span>
+            </li>
+          {% endif %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Spese di spedizione</span>
+            <span>€ {{ prezzo_spedizione|floatformat:2 }}</span>
+          </li>
+        </ul>
+
+        <div class="d-flex justify-content-between align-items-center fs-4 fw-bold mt-3">
+          <span class="text-secondary">Totale Finale:</span>
+          <span class="text-success">€ {{ totale_finale|floatformat:2 }}</span>
+        </div>
+      </div>
+
+      <!-- Stato pagamento -->
+      <div class="d-flex justify-content-between align-items-center mt-4">
+        <span class="fw-bold fs-5">Stato pagamento:</span>
+        {% if ordine.pagato %}
+          <span class="badge bg-success fs-6 rounded-pill px-3 py-2">✅ Pagato</span>
+        {% else %}
+          <span class="badge bg-warning text-dark fs-6 rounded-pill px-3 py-2">⏳ In attesa di pagamento</span>
+        {% endif %}
+      </div>
+
+      <!-- Pagamento -->
+      {% if not ordine.pagato %}
+        <div class="d-grid gap-3 mt-5">
+          <form action="{% url 'stripe_checkout' %}" method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg rounded-pill shadow-sm">
+              💳 Paga con Stripe
+            </button>
+          </form>
+        </div>
+      {% else %}
+        <div class="alert alert-success text-center mt-5 rounded-4 shadow-sm">
+          🎉 Grazie per il tuo pagamento! Il tuo ordine sarà elaborato a breve.
+        </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+{% endblock %}

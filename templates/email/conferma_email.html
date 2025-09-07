@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conferma Ordine</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 20px;
+      color: #2c3e50;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.05);
+    }
+
+    h2 {
+      color: #0d6efd;
+      font-size: 24px;
+    }
+
+    h3 {
+      margin-top: 30px;
+      font-size: 20px;
+      color: #2c3e50;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    ul li {
+      padding: 10px 0;
+      border-bottom: 1px solid #eaeaea;
+      font-size: 16px;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    hr {
+      margin-top: 40px;
+      border: none;
+      border-top: 1px solid #eaeaea;
+    }
+
+    .footer {
+      font-size: 14px;
+      color: #888;
+      margin-top: 20px;
+    }
+
+    @media screen and (max-width: 600px) {
+      .container {
+        padding: 20px 15px;
+      }
+
+      h2, h3 {
+        font-size: 20px;
+      }
+
+      ul li {
+        font-size: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>🙏 Grazie per il tuo ordine da {{ contatti.nome }}!</h2>
+
+    <p>Ciao,</p>
+    <p>Confermiamo la ricezione del tuo ordine <strong>#{{ ordine.codice_ordine }}</strong>.</p>
+
+    <h3>📦 Riepilogo:</h3>
+    <ul>
+      <li><strong>Data:</strong> {{ ordine.data_creazione|date:"d/m/Y H:i" }}</li>
+      <li><strong>Totale:</strong> €{{ ordine.get_totale|floatformat:2 }}</li>
+      <li><strong>Email:</strong> {{ ordine.email }}</li>
+      <li><strong>Telefono:</strong> {{ ordine.telefono }}</li>
+    </ul>
+
+    <p>Riceverai un'altra notifica non appena il tuo pacco sarà spedito. 🚚</p>
+
+    <hr>
+
+    <div class="footer">
+      <p>{{ contatti.nome }} – {{ contatti.indirizzo }}</p>
+      <p>{{ contatti.cap_citta }} – P.IVA {{ contatti.partita_iva }}</p>
+      <p>Email: {{ contatti.email }} – Tel: {{ contatti.telefono }}</p>
+    </div>
+  </div>
+</body>
+</html>

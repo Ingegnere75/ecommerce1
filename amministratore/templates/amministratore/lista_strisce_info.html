@@ -1,0 +1,62 @@
+
+  {% extends 'base.html' %}
+  {% load static %}
+
+  {% block content %}
+
+
+
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h3 class="mb-0">
+      <i class="fas fa-info-circle text-primary me-2"></i>
+      Strisce Informative
+    </h3>
+    <a href="{% url 'aggiungi_striscia' %}" class="btn btn-success shadow-sm">
+      <i class="fas fa-plus me-1"></i> Nuova Striscia
+    </a>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-hover align-middle border shadow-sm rounded overflow-hidden">
+      <thead class="table-light">
+        <tr class="text-center">
+          <th scope="col">Titolo</th>
+          <th scope="col">Testo</th>
+          <th scope="col">Luogo</th>
+          <th scope="col">Attiva</th>
+          <th scope="col">Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in strisce %}
+        <tr style="background-color: {{ s.colore_sfondo }}; color: {{ s.colore_testo }};">
+          <td>{{ s.titolo }}</td>
+          <td>{{ s.testo }}</td>
+          <td>{{ s.get_luogo_display }}</td>
+          <td class="text-center">
+            {% if s.attiva %}
+              <span class="badge bg-success"><i class="fas fa-check-circle me-1"></i>Attiva</span>
+            {% else %}
+              <span class="badge bg-secondary"><i class="fas fa-times-circle me-1"></i>Disattiva</span>
+            {% endif %}
+          </td>
+          <td class="text-center">
+            <a href="{% url 'modifica_striscia' s.pk %}" class="btn btn-sm btn-outline-primary me-1">
+              <i class="fas fa-edit"></i>
+            </a>
+            <a href="{% url 'elimina_striscia' s.pk %}" class="btn btn-sm btn-outline-danger">
+              <i class="fas fa-trash-alt"></i>
+            </a>
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="5" class="text-center text-muted">Nessuna striscia informativa trovata.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

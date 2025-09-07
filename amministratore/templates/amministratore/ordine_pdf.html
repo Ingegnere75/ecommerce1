@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Fattura Ordine #{{ ordine.id }}</title>
+    <style>
+        body {
+            font-family: DejaVu Sans, sans-serif;
+            font-size: 12px;
+            margin: 30px;
+            color: #333;
+        }
+
+        .brand-header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .brand-header h1 {
+            margin: 0;
+            font-size: 24px;
+            color: #222;
+        }
+
+        .brand-header p {
+            margin: 2px 0;
+            font-size: 13px;
+        }
+
+        hr {
+            border: none;
+            border-top: 1px solid #aaa;
+            margin: 20px 0;
+        }
+
+        h3 {
+            margin-bottom: 5px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
+            color: #444;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #aaa;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #eee;
+        }
+
+        .bold {
+            font-weight: bold;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-style: italic;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Intestazione del Brand -->
+<div class="brand-header">
+
+   
+    <h1>{{ contatti.nome }}</h1>
+    <p>{{ contatti.indirizzo }}</p>
+    <p>{{ contatti.cap_citta }}</p>
+    <p>Partita IVA: {{ contatti.partita_iva }}</p>
+    <p>Email: {{ contatti.email }} | Tel: {{ contatti.telefono }}</p>
+</div>
+
+<hr>
+
+<h3>🧾 Ordine #{{ ordine.id }} - {{ ordine.cliente.first_name }} {{ ordine.cliente.last_name }}</h3>
+<p><strong>Codice Fiscale:</strong> {{ ordine.codice_fiscale }}</p>
+<p><strong>Data Ordine:</strong> {{ ordine.data_creazione|date:"d/m/Y H:i" }}</p>
+
+<p><strong>Spedizione:</strong><br>
+{{ ordine.nome }} {{ ordine.cognome }}<br>
+{{ ordine.indirizzo }} {{ ordine.civico }}<br>
+{{ ordine.cap }} {{ ordine.citta }} ({{ ordine.provincia }})
+</p>
+
+{% if ordine.fatturazione_diversa %}
+<p><strong>Fatturazione:</strong><br>
+{{ ordine.nome_fatt }} {{ ordine.cognome_fatt }}<br>
+{{ ordine.indirizzo_fatt }} {{ ordine.civico_fatt }}<br>
+{{ ordine.cap_fatt }} {{ ordine.citta_fatt }} ({{ ordine.provincia_fatt }})
+</p>
+{% endif %}
+
+<p><strong>Stato:</strong>
+    {% if ordine.stato == 'in_attesa' %}In attesa
+    {% elif ordine.stato == 'spedito' %}Spedito
+    {% elif ordine.stato == 'consegnato' %}Consegnato
+    {% else %}Sconosciuto{% endif %}
+</p>
+
+<table>
+    <thead>
+        <tr>
+            <th>Prodotto</th>
+            <th>Prezzo unitario</th>
+            <th>Quantità</th>
+            <th>Totale riga</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for item in ordine.ordineitem_set.all %}
+        <tr>
+            <td>{{ item.prodotto.nome }}</td>
+            <td>€ {{ item.prodotto.prezzo|floatformat:2 }}</td>
+            <td>{{ item.quantita }}</td>
+            <td>€ {{ item.get_subtotale|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="3" class="text-end bold">Totale Ordine:</td>
+            <td class="bold">€ {{ ordine.get_totale|floatformat:2 }}</td>
+        </tr>
+    </tfoot>
+</table>
+
+<hr>
+
+<div class="footer">
+    Grazie per il tuo ordine e per aver scelto <strong>{{ contatti.nome }}</strong>!
+</div>
+
+</body>
+</html>

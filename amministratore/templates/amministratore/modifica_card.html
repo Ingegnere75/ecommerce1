@@ -1,0 +1,76 @@
+    {% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Modifica Card{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h2 class="mb-4">Modifica Card</h2>
+
+  <form method="post" enctype="multipart/form-data" class="row g-4">
+    {% csrf_token %}
+
+    <div class="col-md-6">
+      <label for="id_titolo" class="form-label">Titolo</label>
+      {{ form.titolo|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_descrizione" class="form-label">Descrizione</label>
+      {{ form.descrizione|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Immagine Attuale</label><br>
+      {% if form.instance.immagine %}
+        <img src="{{ form.instance.immagine.url }}" class="img-thumbnail" style="height: 80px;">
+      {% else %}
+        <p class="text-muted">Nessuna immagine caricata</p>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_immagine" class="form-label">Carica Nuova Immagine</label>
+      {{ form.immagine|add_class:"form-control" }}
+      <small class="form-text text-muted">{{ form.immagine.help_text }}</small>
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_link_custom" class="form-label">Link Personalizzato</label>
+      {{ form.link_custom|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_categoria_collegata" class="form-label">Categoria Collegata</label>
+      {{ form.categoria_collegata|add_class:"form-select" }}
+    </div>
+
+    <div class="col-md-6">
+      <label for="id_prodotto_collegato" class="form-label">Prodotto Collegato</label>
+      {{ form.prodotto_collegato|add_class:"form-select" }}
+    </div>
+
+    <div class="col-md-3">
+      <label for="id_larghezza" class="form-label">Larghezza (px)</label>
+      {{ form.larghezza|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-3">
+      <label for="id_altezza" class="form-label">Altezza (px)</label>
+      {{ form.altezza|add_class:"form-control" }}
+    </div>
+
+    <div class="col-12 d-flex justify-content-between mt-4">
+      <a href="{% url 'gestione_home' %}" class="btn btn-secondary">Annulla</a>
+      <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+   

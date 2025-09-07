@@ -1,0 +1,89 @@
+  {% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+
+  <!-- Pulsante indietro -->
+  <div class="mb-4">
+    <a href="{% url 'admin-magazzino' %}" class="btn btn-outline-primary rounded-pill shadow-sm">
+      <i class="fas fa-arrow-left me-1"></i> Torna al Magazzino
+    </a>
+  </div>
+
+  <!-- Titolo -->
+  <h2 class="text-primary fw-bold mb-4">Prodotti in Uscita dal Magazzino</h2>
+
+  <!-- Tabella -->
+  <div class="table-responsive shadow-sm rounded-4">
+    <table class="table table-hover align-middle">
+      <thead class="table-dark text-light text-center">
+        <tr>
+          <th>Codice</th>
+          <th>Nome</th>
+          <th>Prezzo</th>
+          <th>Quantità Ordinata</th>
+          <th>Disponibilità Residua</th>
+          <th>Data di Vendita</th>
+          <th>Utente</th>
+          <th>Azioni</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in prodotti_ordinati %}
+        {% with residuo=item.prodotto.disponibilita|add:"-{{ item.quantita }}" %}
+        <tr class="text-center {% if residuo <= 2 %}table-warning{% endif %}">
+          <td>{{ item.prodotto.codice_prodotto }}</td>
+          <td>{{ item.prodotto.nome }}</td>
+          <td>€ {{ item.prodotto.prezzo }}</td>
+          <td>{{ item.quantita }}</td>
+          <td class="fw-bold {% if residuo <= 2 %}text-danger{% endif %}">{{ residuo }}</td>
+          <td>{{ item.ordine.data_creazione|date:"d/m/Y H:i" }}</td>
+          <td>
+            <a href="{% url 'dettaglio_utente_ordini' item.ordine.id %}" class="btn btn-outline-info btn-sm rounded-pill">
+              👤 Vedi
+            </a>
+          </td>
+          <td>
+            <div class="d-flex justify-content-center gap-2">
+              {% if residuo <= 2 %}
+              <a href="{% url 'riordina_prodotto' item.prodotto.id %}" class="btn btn-outline-warning btn-sm rounded-pill">
+                🔁 Riordina
+              </a>
+              {% endif %}
+              <form method="post" action="{% url 'elimina_uscita_magazzino' item.id %}" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill" onclick="return confirm('Confermi l\'eliminazione?')">
+                  🗑️ Elimina
+                </button>
+              </form>
+            </div>
+          </td>
+        </tr>
+        {% endwith %}
+        {% empty %}
+        <tr>
+          <td colspan="8" class="text-center text-muted">Nessuna uscita di magazzino registrata.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Stile opzionale -->
+<style>
+  .table td,
+  .table th {
+    vertical-align: middle;
+  }
+
+  @media (max-width: 576px) {
+    .btn-sm {
+      font-size: 0.8rem;
+      padding: 0.3rem 0.6rem;
+    }
+  }
+</style>
+{% endblock %}
+

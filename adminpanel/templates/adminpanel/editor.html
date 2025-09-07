@@ -1,0 +1,244 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+  .toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 15px;
+  }
+
+  .toolbar button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    font-size: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+  }
+
+  .canvas-area {
+    width: 100%;
+    height: 85vh;
+    border: 2px dashed #ccc;
+    position: relative;
+    overflow: auto;
+    background-color: #fefefe;
+  }
+
+  .element {
+    border: 1px dotted #aaa;
+    background: #fff;
+    padding: 10px;
+    position: absolute;
+    resize: both;
+    overflow: auto;
+  }
+
+  .remove-btn {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .card {
+    box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    padding: 15px;
+    background-color: white;
+    border-radius: 8px;
+  }
+</style>
+
+<div class="toolbar">
+  <button class="btn btn-dark" onclick="importTemplate()">📥 Importa Home</button>
+  <button class="btn btn-outline-primary" onclick="previewResult()">👁️ Preview</button>
+  <button class="btn btn-danger" onclick="addElement('text')">🅰️ Testo</button>
+  <button class="btn btn-success" onclick="addElement('image')">🖼️ Immagine</button>
+  <button class="btn btn-info" onclick="addElement('video')">🎮 Video</button>
+  <button class="btn btn-warning" onclick="addElement('file')">📄 File</button>
+  <button class="btn btn-primary" onclick="addElement('card')">📦 Card</button>
+  <button class="btn btn-secondary" onclick="addElement('banner')">➕ Banner</button>
+</div>
+
+<div class="canvas-area" id="canvas"></div>
+
+<div class="text-end p-3">
+  <button class="btn btn-success" onclick="saveLayout()">💾 Salva Layout</button>
+</div>
+
+<!-- Preview Modal -->
+<div class="modal fade" id="previewModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Anteprima Home</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="previewBody"></div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+<script>
+  let count = 0;
+
+  function importTemplate() {
+    fetch("{% url 'importa_home' %}")
+
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("canvas").innerHTML = html;
+      });
+  }
+
+  function previewResult() {
+    const content = document.getElementById("canvas").innerHTML;
+    document.getElementById("previewBody").innerHTML = content;
+    new bootstrap.Modal(document.getElementById('previewModal')).show();
+  }
+
+  function addElement(type) {
+    const canvas = document.getElementById("canvas");
+    const el = document.createElement("div");
+    el.className = "element";
+    el.style.top = "100px";
+    el.style.left = "100px";
+    el.setAttribute("data-type", type);
+
+    const close = document.createElement("button");
+    close.className = "remove-btn";
+    close.innerText = "x";
+    close.onclick = () => el.remove();
+
+    if (type === "text") {
+      el.innerHTML = `<textarea class="form-control" rows="4" placeholder="Scrivi qui..."></textarea>`;
+    } else if (type === "image") {
+      el.innerHTML = `
+        <input type="file" accept="image/*" onchange="previewFile(event, 'img-${count}', 'image')" style="display:none;" id="input-${count}" />
+        <label for="input-${count}" class="btn btn-outline-secondary">📁 Carica immagine</label>
+        <img id="img-${count}" style="width:100%; height:auto; display:none;" />`;
+    } else if (type === "video") {
+      el.innerHTML = `
+        <input type="file" accept="video/*" onchange="previewFile(event, 'vid-${count}', 'video')" style="display:none;" id="input-${count}" />
+        <label for="input-${count}" class="btn btn-outline-secondary">🎥 Carica video</label>
+        <video id="vid-${count}" style="width:100%; height:auto; display:none;" controls></video>`;
+    } else if (type === "file") {
+      el.innerHTML = `
+        <input type="file" onchange="previewFile(event, 'file-${count}', 'file')" style="display:none;" id="input-${count}" />
+        <label for="input-${count}" class="btn btn-outline-secondary">📄 Carica file</label>
+        <a id="file-${count}" target="_blank" style="display:none;">📎 File caricato</a>`;
+    } else if (type === "card") {
+      el.innerHTML = `
+        <div class="card">
+          <h5 class="card-title">Titolo Card</h5>
+          <p class="card-text">Descrizione della card</p>
+          <a href="#" class="btn btn-primary">Azione</a>
+        </div>`;
+    } else if (type === "banner") {
+      el.innerHTML = `<h3 class="text-center">🔷 Banner testuale o grafico</h3>`;
+    }
+
+    el.appendChild(close);
+    el.id = `element-${count}`;
+    canvas.appendChild(el);
+
+    interact(el)
+      .draggable({
+        modifiers: [interact.modifiers.restrictRect({ restriction: 'parent' })],
+        listeners: { move: dragMoveListener }
+      })
+      .resizable({ edges: { left: true, right: true, bottom: true, top: true } })
+      .on('resizemove', function (event) {
+        let x = (parseFloat(event.target.getAttribute('data-x')) || 0) + event.deltaRect.left;
+        let y = (parseFloat(event.target.getAttribute('data-y')) || 0) + event.deltaRect.top;
+
+        Object.assign(event.target.style, {
+          width: `${event.rect.width}px`,
+          height: `${event.rect.height}px`,
+          transform: `translate(${x}px, ${y}px)`
+        });
+
+        event.target.setAttribute('data-x', x);
+        event.target.setAttribute('data-y', y);
+      });
+
+    count++;
+  }
+
+  function dragMoveListener(event) {
+    const target = event.target;
+    let x = (parseFloat(target.getAttribute('data-x')) || 0) + event.dx;
+    let y = (parseFloat(target.getAttribute('data-y')) || 0) + event.dy;
+
+    target.style.transform = `translate(${x}px, ${y}px)`;
+    target.setAttribute('data-x', x);
+    target.setAttribute('data-y', y);
+  }
+
+  function previewFile(e, targetId, type) {
+    const file = e.target.files[0];
+    const target = document.getElementById(targetId);
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+      if (type === "image" || type === "video") {
+        target.src = evt.target.result;
+        target.style.display = "block";
+      } else if (type === "file") {
+        target.href = evt.target.result;
+        target.innerText = `📎 ${file.name}`;
+        target.style.display = "inline-block";
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function saveLayout() {
+  const html = document.getElementById("canvas").innerHTML;
+
+  fetch("{% url 'salva_layout' %}", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": getCookie("csrftoken"),
+    },
+    body: JSON.stringify({ html }),
+  })
+  .then(res => res.json())
+  .then(data => {
+    if (data.success) {
+      alert("✅ Layout salvato con successo!");
+    } else {
+      alert("❌ Errore nel salvataggio.");
+    }
+  });
+}
+
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== "") {
+    const cookies = document.cookie.split(";");
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + "=") {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+</script>
+{% endblock %}

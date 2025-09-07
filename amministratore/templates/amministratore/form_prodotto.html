@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h2 class="mb-4 text-primary fw-bold">{{ titolo }}</h2>
+
+    <form method="post" enctype="multipart/form-data" class="shadow p-4 rounded bg-white">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-success">
+            <i class="fas fa-check-circle me-1"></i> Salva
+        </button>
+        <a href="{% url 'admin-magazzino' %}" class="btn btn-secondary">
+            <i class="fas fa-arrow-left me-1"></i> Torna al Magazzino
+        </a>
+    </form>
+</div>
+{% endblock %}

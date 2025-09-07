@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+{% block title %}I tuoi Cookie{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  
+  <!-- RIGA CON FRECCIA E TITOLO -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <a href="{% url 'dashboard' %}" class="btn btn-outline-primary btn-sm">
+        <i class="fas fa-arrow-left"></i> Torna alla Home
+      </a>
+    </div>
+    <h2 class="mb-0 text-center fw-bold">I tuoi Cookie Salvati</h2>
+    <div>
+      {% if cookies %}
+      <a href="{% url 'elimina_tutti_cookie_user' %}" 
+         class="btn btn-danger btn-sm"
+         onclick="return confirm('Sei sicuro di voler eliminare tutti i tuoi cookie?');">
+        <i class="fas fa-trash-alt"></i> Elimina Tutti
+      </a>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- TABELLA COOKIE -->
+  <div class="card shadow-sm border-0">
+    <div class="card-body p-0">
+      <div class="table-responsive">
+        <table class="table table-hover table-striped align-middle mb-0">
+          <thead class="table-info text-center">
+            <tr>
+              <th>IP</th>
+              <th>Scelta</th>
+              <th>Data</th>
+              <th>Azione</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for cookie in cookies %}
+            <tr class="text-center">
+              <td>{{ cookie.ip_address|default:"-" }}</td>
+              <td><span class="badge bg-success">{{ cookie.scelta }}</span></td>
+              <td>{{ cookie.data|date:"d/m/Y H:i" }}</td>
+              <td>
+                <a href="{% url 'elimina_cookie_user' cookie.id %}" 
+                   class="btn btn-outline-danger btn-sm" 
+                   onclick="return confirm('Eliminare questo cookie?');">
+                  <i class="fas fa-trash"></i> Elimina
+                </a>
+              </td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="4" class="text-center text-muted py-4">
+                Nessun cookie registrato per il tuo account
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

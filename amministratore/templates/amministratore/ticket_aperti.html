@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+<div class="container-fluid mt-4">
+    <h2 class="mb-4">📨 Gestione Reclami</h2>
+
+    <div class="table-responsive">
+        <div class="mb-4">
+            <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+              <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+            </a>
+          </div>
+        <table class="table table-bordered table-striped table-hover align-middle w-100">
+            <thead class="table-dark text-center">
+                <tr>
+                    <th>ID</th>
+                    <th>Utente</th>
+                    <th>Ticket</th>
+                    <th>Email</th>
+                    <th>Ordine</th>
+                    <th>Oggetto</th>
+                    <th>Messaggio</th>
+                    <th>Risposta Admin</th>
+                    <th>Stato</th>
+                    <th>Esito</th>
+                    <th>Data Invio</th>
+                    <th>Data Risposta</th>
+                    <th>Azioni</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for r in reclami %}
+                <tr>
+                    <form method="post" action="{% url 'rispondi_reclamo' r.id %}">
+                        {% csrf_token %}
+                        <td>{{ r.id }}</td>
+                        <td>{{ r.nome }} {{ r.cognome }}</td>
+                        <td>#{{ r.numero_ticket }}</td>
+                        <td>{{ r.email }}</td>
+                        <td>{{ r.numero_ordine }}</td>
+                        <td>{{ r.oggetto }}</td>
+                        <td>
+                            <textarea name="messaggio_messaggio_{{ r.id }}" class="form-control" rows="2">{{ r.messaggio }}</textarea>
+                        </td>
+                        <td>
+                            <textarea name="risposta_risposta_{{ r.id }}" class="form-control" rows="2">{{ r.risposta_admin }}</textarea>
+                        </td>
+                        <td>
+                            <select name="stato_stato_{{ r.id }}" class="form-select">
+                                {% for val, label in stato_choices %}
+                                    <option value="{{ val }}" {% if r.stato == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>
+                            <select name="esito_esito_{{ r.id }}" class="form-select">
+                                {% for val, label in esito_choices %}
+                                    <option value="{{ val }}" {% if r.esito == val %}selected{% endif %}>{{ label }}</option>
+                                {% endfor %}
+                            </select>
+                        </td>
+                        <td>{{ r.data_invio|date:"d/m/Y H:i" }}</td>
+                        <td>{% if r.data_risposta %}{{ r.data_risposta|date:"d/m/Y H:i" }}{% else %}-{% endif %}</td>
+                        <td class="text-center">
+                            <a href="{% url 'dettaglio_reclamo' r.id %}" class="btn btn-sm btn-info">Dettaglio</a>
+                            <button class="btn btn-sm btn-success mt-2" type="submit">💾 Salva</button>
+                        </td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+{% endblock %}

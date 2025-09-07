@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Categorie{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Categorie</h1>
+    <div class="row">
+        {% for categoria in categorie %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <a href="{% url 'prodotti_per_categoria' categoria.id %}">
+                    <img src="{{ categoria.immagine.url }}" class="card-img-top" alt="{{ categoria.nome }}">
+                </a>
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ categoria.nome }}</h5>
+
+                    {% include 'includes/sconto_categoria.html' with categoria=categoria %}
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+1~{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Categorie{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Categorie</h1>
+    <div class="row">
+        {% for categoria in categorie %}
+        <div class="col-md-4">
+            <div class="card mb-4">
+                <a href="{% url 'prodotti_per_categoria' categoria.id %}">
+                    <img src="{{ categoria.immagine.url }}" class="card-img-top" alt="{{ categoria.nome }}">
+                </a>
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ categoria.nome }}</h5>
+
+                    {% include 'includes/sconto_categoria.html' with categoria=categoria %}
+                    
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

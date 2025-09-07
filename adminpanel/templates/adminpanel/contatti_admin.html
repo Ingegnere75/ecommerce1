@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Admin - Kaira{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h1 class="fw-bold mb-5 text-center">📊 Dashboard Amministratore</h1>
+
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+
+    <!-- Editor Home -->
+    <div class="col">
+      <div class="card shadow border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-bold">Editor Home</h5>
+          <p class="card-text text-muted">Personalizza la home e tutte le pagine.</p>
+          <a href="{% url 'editor_home' %}" class="btn btn-outline-primary w-100">🎨 Vai all'Editor</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Magazzino -->
+    <div class="col">
+      <div class="card shadow border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-bold">Magazzino</h5>
+          <p class="card-text text-muted">Gestisci prodotti, scorte e rifornimenti.</p>
+          <a href="{% url 'magazzino_admin' %}" class="btn btn-outline-success w-100">📦 Gestione Magazzino</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Spedizioni -->
+    <div class="col">
+      <div class="card shadow border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-bold">Spedizioni</h5>
+          <p class="card-text text-muted">Controlla lo stato delle spedizioni e i corrieri.</p>
+          <a href="{% url 'spedizioni_admin' %}" class="btn btn-outline-warning w-100">🚚 Gestione Spedizioni</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistiche -->
+    <div class="col">
+      <div class="card shadow border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-bold">Statistiche</h5>
+          <p class="card-text text-muted">Visualizza l’andamento vendite e visite social.</p>
+          <a href="{% url 'statistiche_admin' %}" class="btn btn-outline-danger w-100">📈 Visualizza Statistiche</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contatti -->
+    <div class="col">
+      <div class="card shadow border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-bold">Contatti</h5>
+          <p class="card-text text-muted">Visualizza e rispondi ai messaggi degli utenti.</p>
+          <a href="{% url 'contatti_admin' %}" class="btn btn-outline-info w-100">📬 Gestione Contatti</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Admin Django -->
+    <div class="col">
+      <div class="card shadow border-0 h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title fw-bold">Pannello Django</h5>
+          <p class="card-text text-muted">Accedi alla gestione interna Django.</p>
+          <a href="/admin/" class="btn btn-dark w-100">🔧 Vai a Django Admin</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

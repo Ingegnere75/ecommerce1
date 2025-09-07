@@ -1,0 +1,204 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard AI Statistiche{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+  <h1 class="text-center mb-4">Dashboard AI - Statistiche Ecommerce</h1>
+
+  <div class="row">
+    <div class="col-md-6 mb-4"><canvas id="graficoVenditeMese"></canvas></div>
+    <div class="col-md-6 mb-4"><canvas id="graficoOrdiniTotali"></canvas></div>
+    <div class="col-md-6 mb-4"><canvas id="graficoClientiTotali"></canvas></div>
+    <div class="col-md-6 mb-4"><canvas id="graficoProdottiVenduti"></canvas></div>
+    <div class="col-md-12 mb-4"><canvas id="graficoValoreTotale"></canvas></div>
+    <div class="col-md-6 mb-4"><canvas id="graficoConversione"></canvas></div>
+    <div class="col-md-6 mb-4"><canvas id="graficoCarrelliAbbandonati"></canvas></div>
+    <div class="col-md-6 mb-4"><canvas id="graficoMediaOrdine"></canvas></div>
+    <div class="col-md-6 mb-4"><canvas id="graficoTopProdotto"></canvas></div>
+  </div>
+
+  <!-- SWOT Analysis -->
+  <h3 class="text-center mt-5">Analisi SWOT</h3>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4" id="swot-section">
+    <div class="col">
+      <div class="card border-success">
+        <div class="card-header bg-success text-white">Strengths</div>
+        <ul class="list-group list-group-flush" id="swot-strengths"></ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card border-danger">
+        <div class="card-header bg-danger text-white">Weaknesses</div>
+        <ul class="list-group list-group-flush" id="swot-weaknesses"></ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card border-primary">
+        <div class="card-header bg-primary text-white">Opportunities</div>
+        <ul class="list-group list-group-flush" id="swot-opportunities"></ul>
+      </div>
+    </div>
+    <div class="col">
+      <div class="card border-warning">
+        <div class="card-header bg-warning text-dark">Threats</div>
+        <ul class="list-group list-group-flush" id="swot-threats"></ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+function creaGrafici(data) {
+  const colori = [
+    'rgba(75, 192, 192, 0.6)',
+    'rgba(255, 99, 132, 0.6)',
+    'rgba(153, 102, 255, 0.6)',
+    'rgba(255, 206, 86, 0.6)',
+    'rgba(54, 162, 235, 0.6)'
+  ];
+
+  new Chart(document.getElementById('graficoVenditeMese'), {
+    type: 'bar',
+    data: {
+      labels: ['Vendite ultime 24 ore'],
+      datasets: [{ label: 'Vendite', data: [data.vendite_mese], backgroundColor: colori[0] }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoOrdiniTotali'), {
+    type: 'bar',
+    data: {
+      labels: ['Ordini totali'],
+      datasets: [{ label: 'Ordini', data: [data.ordini_totali], backgroundColor: colori[1] }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoClientiTotali'), {
+    type: 'bar',
+    data: {
+      labels: ['Clienti unici'],
+      datasets: [{ label: 'Clienti', data: [data.clienti_totali], backgroundColor: colori[2] }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoProdottiVenduti'), {
+    type: 'bar',
+    data: {
+      labels: data.prodotti_codici || ['Nessun dato'],
+      datasets: [{
+        label: 'Quantità vendute',
+        data: data.prodotti_quantita || [0],
+        backgroundColor: colori[3]
+      }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoValoreTotale'), {
+    type: 'line',
+    data: {
+      labels: data.etichette_giorni || [],
+      datasets: [{
+        label: 'Valore vendite (€)',
+        data: data.valori_giorni || [],
+        borderColor: colori[4],
+        backgroundColor: 'rgba(54, 162, 235, 0.2)',
+        fill: true,
+        tension: 0.4
+      }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoConversione'), {
+    type: 'bar',
+    data: {
+      labels: ['Tasso di conversione (%)'],
+      datasets: [{
+        label: 'Conversione',
+        data: [data.tasso_conversione],
+        backgroundColor: colori[0]
+      }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoCarrelliAbbandonati'), {
+    type: 'line',
+    data: {
+      labels: data.etichette_carrelli_abbandonati || [],
+      datasets: [{
+        label: 'Carrelli abbandonati (ultimi 365 giorni)',
+        data: data.valori_carrelli_abbandonati || [],
+        backgroundColor: 'rgba(255, 99, 132, 0.2)',
+        borderColor: colori[1],
+        fill: true,
+        tension: 0.3,
+        pointRadius: 0
+      }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoMediaOrdine'), {
+    type: 'bar',
+    data: {
+      labels: ['Valore medio ordine (€)'],
+      datasets: [{
+        label: 'Media ordine',
+        data: [data.media_valore_ordine],
+        backgroundColor: colori[2]
+      }]
+    }
+  });
+
+  new Chart(document.getElementById('graficoTopProdotto'), {
+    type: 'bar',
+    data: {
+      labels: [data.nome_top_prodotto],
+      datasets: [{
+        label: 'Unità vendute',
+        data: [data.quantita_top_prodotto],
+        backgroundColor: colori[3]
+      }]
+    }
+  });
+
+  aggiornaSwot('strengths', data.swot.Strengths);
+  aggiornaSwot('weaknesses', data.swot.Weaknesses);
+  aggiornaSwot('opportunities', data.swot.Opportunities);
+  aggiornaSwot('threats', data.swot.Threats);
+}
+
+function aggiornaSwot(tipo, dati) {
+  const target = document.getElementById(`swot-${tipo}`);
+  target.innerHTML = '';
+  if (!dati || dati.length === 0) {
+    target.innerHTML = '<li class="list-group-item text-muted">Nessun dato disponibile</li>';
+    return;
+  }
+  dati.forEach(voce => {
+    const li = document.createElement('li');
+    li.classList.add('list-group-item');
+    li.textContent = voce;
+    target.appendChild(li);
+  });
+}
+
+function caricaDati() {
+  fetch("{% url 'admin-statistiche' %}", {
+    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+  })
+    .then(response => response.json())
+    .then(data => creaGrafici(data))
+    .catch(error => console.error('Errore nel caricamento dei dati:', error));
+}
+
+caricaDati();
+setInterval(caricaDati, 10000);
+</script>
+{% endblock %}

@@ -1,0 +1,27 @@
+{% if elemento.tipo == 'testo' and elemento.contenuto_testo %}
+  <section class="my-5 px-3" data-aos="fade-up">
+    <div class="container text-center">
+      <h4 class="fw-bold mb-3">{{ elemento.titolo }}</h4>
+      <p class="text-muted fs-5">{{ elemento.contenuto_testo|safe }}</p>
+    </div>
+  </section>
+{% elif elemento.tipo == 'immagine' and elemento.immagine %}
+  <section class="text-center my-5" data-aos="zoom-in">
+    <img src="{{ elemento.immagine.url }}"
+         style="{% if elemento.larghezza %}width:{{ elemento.larghezza }}px;{% endif %}{% if elemento.altezza %}height:{{ elemento.altezza }}px;{% endif %} object-fit:cover;"
+         class="img-fluid rounded shadow mb-3">
+    {% if elemento.titolo %}
+      <h5 class="fw-bold">{{ elemento.titolo }}</h5>
+    {% endif %}
+  </section>
+{% elif elemento.tipo == 'video' and elemento.video %}
+  <section class="text-center my-5" data-aos="zoom-in-up">
+    <video width="{{ elemento.larghezza|default:'70%' }}" height="{{ elemento.altezza }}" controls class="rounded shadow">
+      <source src="{{ elemento.video.url }}" type="video/mp4">
+      Il tuo browser non supporta il video.
+    </video>
+    {% if elemento.titolo %}
+      <h5 class="fw-bold mt-3">{{ elemento.titolo }}</h5>
+    {% endif %}
+  </section>
+{% endif %}

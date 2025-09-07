@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Conferma eliminazione{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <div class="alert alert-warning shadow p-4 rounded">
+        <h3>Conferma eliminazione</h3>
+        <p>Sei sicuro di voler eliminare la card <strong>"{{ card.titolo }}"</strong>?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Sì, elimina</button>
+            <a href="{% url 'gestione_home' %}" class="btn btn-secondary">Annulla</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,55 @@
+  {% if homebanner.video %}
+  <style>
+    .video-wrapper {
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+      border-radius: 20px;
+      transition: transform 0.3s ease-in-out;
+      overflow: hidden;
+    }
+    .video-wrapper:hover {
+      transform: scale(1.01);
+    }
+    .zoom-hover {
+      transition: transform 0.3s ease-in-out;
+    }
+    .zoom-hover:hover {
+      transform: scale(1.02);
+    }
+  </style>
+
+  <div class="container d-flex justify-content-center my-5" data-aos="zoom-in">
+    <div class="video-wrapper" 
+         style="max-width: {% if homebanner.larghezza %}{{ homebanner.larghezza }}px{% else %}100%{% endif %}; width: 100%; background-color: #000;">
+      <video 
+        autoplay 
+        muted 
+        loop 
+        playsinline 
+        disablepictureinpicture 
+        controlslist="nodownload nofullscreen noplaybackrate noremoteplayback"
+        oncontextmenu="return false;"
+        class="w-100 d-block"
+        style="{% if homebanner.altezza %}height:{{ homebanner.altezza }}px;{% endif %} object-fit:cover;">
+        <source src="{{ homebanner.video.url }}" type="video/mp4">
+        Il tuo browser non supporta il video.
+      </video>
+    </div>
+  </div>
+
+  {% if homebanner.titolo %}
+    <h3 class="fw-bold text-center mt-3">{{ homebanner.titolo }}</h3>
+  {% endif %}
+
+{% elif homebanner.immagine %}
+  <div class="container d-flex justify-content-center my-5" data-aos="zoom-in">
+    <img 
+      src="{{ homebanner.immagine.url }}"
+      alt="{% if homebanner.titolo %}{{ homebanner.titolo }}{% else %}Banner{% endif %}"
+      class="rounded shadow zoom-hover"
+      style="{% if homebanner.larghezza %}width:{{ homebanner.larghezza }}px;{% else %}width:100%;{% endif %}{% if homebanner.altezza %} height:{{ homebanner.altezza }}px;{% endif %} object-fit:cover;">
+  </div>
+
+  {% if homebanner.titolo %}
+    <h3 class="fw-bold text-center mt-3">{{ homebanner.titolo }}</h3>
+  {% endif %}
+{% endif %}

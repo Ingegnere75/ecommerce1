@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+    </a>
+  </div>
+  <h1>Chi siamo</h1>
+  <p>Benvenuto nella nostra azienda. Puoi inserire foto, testo, banner, video ecc.</p>
+  <img src="{% static 'images/team.jpg' %}" class="img-fluid my-4" alt="Il nostro team">
+</div>
+{% endblock %}

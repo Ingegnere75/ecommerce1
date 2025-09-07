@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container py-5">
+
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h1 class="text-center text-primary fw-bold mb-4">{{ pagina.titolo }}</h1>
+
+
+  {% if pagina.immagine1 or pagina.immagine2 or pagina.immagine3 %}
+    <div class="row text-center mb-4">
+      {% if pagina.immagine1 %}<div class="col-md-4"><img src="{{ pagina.immagine1.url }}" class="img-fluid rounded mb-2 shadow"></div>{% endif %}
+      {% if pagina.immagine2 %}<div class="col-md-4"><img src="{{ pagina.immagine2.url }}" class="img-fluid rounded mb-2 shadow"></div>{% endif %}
+      {% if pagina.immagine3 %}<div class="col-md-4"><img src="{{ pagina.immagine3.url }}" class="img-fluid rounded mb-2 shadow"></div>{% endif %}
+    </div>
+  {% endif %}
+
+  {% if pagina.video_file %}
+    <div class="mb-4">
+      <video controls class="w-100 shadow rounded">
+        <source src="{{ pagina.video_file.url }}" type="video/mp4">
+        Il tuo browser non supporta il video.
+      </video>
+    </div>
+  {% endif %}
+
+  {% if pagina.pdf and pagina.mostra_pdf %}
+    <div class="mb-4">
+      <iframe src="{{ pagina.pdf.url }}" width="100%" height="600px" class="rounded border shadow"></iframe>
+    </div>
+  {% endif %}
+
+  <div class="bg-light p-4 rounded shadow-sm">
+    {{ pagina.contenuto_testo|safe }}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,117 @@
+  {% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<style>
+  body, table {
+    font-family: 'Poppins', sans-serif;
+  }
+  th, td {
+    vertical-align: middle !important;
+    text-align: center;
+  }
+  .table thead th {
+    background-color: #0d6efd;
+    color: white;
+  }
+  .btn-action {
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    padding: 6px;
+    border-radius: 6px;
+  }
+</style>
+
+<div class="container py-4">
+  <!-- Pulsante Torna alla Dashboard -->
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+  <!-- Intestazione e pulsanti azione -->
+
+  <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap">
+    <a href="{% url 'esporta_magazzino_pdf' %}" class="btn btn-outline-success">
+        <i class="fas fa-arrow-down me-1"></i> Esporta tutto in pdf
+      </a>
+      <a href="{% url 'situazione_magazzino' %}" class="btn btn-outline-danger">
+        <i class="fas fa-arrow-up me-1"></i> 📦 Prodotti Attualmente in Magazzino
+      </a>
+      <a href="{% url 'aggiungi_prodotto' %}" class="btn btn-outline-success">
+        <i class="fas fa-arrow-down me-1"></i> 📦 Aggiungi Prodotto
+      </a>
+      
+      <a href="{% url 'magazzino_entrate' %}" class="btn btn-outline-success">
+        <i class="fas fa-arrow-down me-1"></i> Magazzino Entrate
+      </a>
+      <a href="{% url 'magazzino_uscite' %}" class="btn btn-outline-info">
+        <i class="fas fa-arrow-up me-1"></i> Magazzino Uscite
+      </a>
+      
+    </div>
+  </div>
+
+  <!-- Tabella dei prodotti -->
+  <div class="card shadow-sm border-0">
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover text-center align-middle mb-0">
+        <thead>
+          <tr>
+            <th>Immagine</th>
+            <th>Codice</th>
+            <th>Magazzino</th>
+            <th>Nome</th>
+            <th>Descrizione</th>
+            <th>Prezzo</th>
+            <th>Disponibilità</th>
+            <th>Categoria</th>
+            <th>Sottocategoria</th>
+            <th>Colorazioni</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for prodotto in prodotti %}
+          <tr>
+            <td>
+              {% if prodotto.immagine %}
+                <img src="{{ prodotto.immagine.url }}" alt="{{ prodotto.nome }}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;" />
+              {% else %}
+                <span class="text-muted">Nessuna immagine</span>
+              {% endif %}
+            </td>
+            <td>{{ prodotto.codice_prodotto }}</td>
+            <td>{{ prodotto.codice_magazzino }}</td>
+            <td>{{ prodotto.nome }}</td>
+            <td>{{ prodotto.descrizione|truncatechars:50 }}</td>
+            <td>€ {{ prodotto.prezzo|floatformat:2 }}</td>
+            <td><strong>{{ prodotto.disponibilita }}</strong></td>
+            <td>{{ prodotto.categoria.nome }}</td>
+            <td>{{ prodotto.sottocategoria.nome }}</td>
+            <td>{{ prodotto.colorazioni }}</td>
+            <td>
+              <a href="{% url 'modifica_prodotto' prodotto.id %}" class="btn btn-warning btn-sm btn-action" title="Modifica">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="{% url 'elimina_prodotto' prodotto.id %}" class="btn btn-danger btn-sm btn-action" onclick="return confirm('Confermi l\'eliminazione?');" title="Elimina">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="11" class="text-muted text-center">Nessun prodotto trovato in magazzino.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+

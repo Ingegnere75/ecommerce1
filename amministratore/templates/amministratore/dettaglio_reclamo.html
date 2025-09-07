@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container mt-4">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h2>📄 Dettaglio Reclamo #{{ reclamo.numero_ticket }}</h2>
+    <ul class="list-group">
+        <li class="list-group-item"><strong>Utente:</strong> {{ reclamo.nome }} {{ reclamo.cognome }}</li>
+        <li class="list-group-item"><strong>Email:</strong> {{ reclamo.email }}</li>
+        <li class="list-group-item"><strong>Ordine:</strong> {{ reclamo.numero_ordine }}</li>
+        <li class="list-group-item"><strong>Oggetto:</strong> {{ reclamo.oggetto }}</li>
+        <li class="list-group-item">
+            <strong>Messaggio:</strong><br>{{ reclamo.messaggio|linebreaks }}
+        </li>
+        <li class="list-group-item">
+            <strong>Risposta admin:</strong><br>{{ reclamo.risposta_admin|linebreaks }}
+        </li>
+        <li class="list-group-item"><strong>Stato:</strong> {{ reclamo.get_stato_display }}</li>
+        <li class="list-group-item"><strong>Esito:</strong> {{ reclamo.get_esito_display }}</li>
+        <li class="list-group-item"><strong>Inviato il:</strong> {{ reclamo.data_invio|date:"d/m/Y H:i" }}</li>
+        <li class="list-group-item"><strong>Risposto il:</strong> {% if reclamo.data_risposta %}{{ reclamo.data_risposta|date:"d/m/Y H:i" }}{% else %}-{% endif %}</li>
+    </ul>
+
+    <a href="{% url 'gestione_reclami' %}" class="btn btn-secondary mt-3">🔙 Torna alla lista</a>
+</div>
+
+{% endblock %}

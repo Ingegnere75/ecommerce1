@@ -1,0 +1,16 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Log Registrato</title>
+    <link href="{% static 'kaira/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+<section class="container py-5 text-center">
+    <h2 class="mb-4">Log registrato correttamente!</h2>
+    <p class="lead">Il log è stato salvato per futuri controlli.</p>
+    <a href="/log/salva-log/" class="btn btn-warning mt-3">Registra un altro log</a>
+</section>
+</body>
+</html>

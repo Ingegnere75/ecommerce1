@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Modifica Dati Negozio{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h2 class="text-primary fw-bold mb-4">
+    🛠️ Modifica Dati Negozio
+  </h2>
+
+  <form method="post" enctype="multipart/form-data" class="bg-white shadow p-4 rounded-3">
+    {% csrf_token %}
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-dark">
+        <i class="fas fa-store me-2 text-primary"></i> Nome Negozio
+      </label>
+      {{ form.nome }}
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-dark">
+        <i class="fas fa-map-marker-alt me-2 text-success"></i> Indirizzo
+      </label>
+      {{ form.indirizzo }}
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-dark">
+        <i class="fas fa-city me-2 text-info"></i> CAP e Città
+      </label>
+      {{ form.cap_citta }}
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-dark">
+        <i class="fas fa-id-card me-2 text-secondary"></i> Partita IVA
+      </label>
+      {{ form.partita_iva }}
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-dark">
+        <i class="fas fa-envelope me-2 text-warning"></i> Email
+      </label>
+      {{ form.email }}
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-dark">
+        <i class="fas fa-phone me-2 text-danger"></i> Telefono
+      </label>
+      {{ form.telefono }}
+    </div>
+
+    <div class="mb-4">
+      <label class="form-label fw-semibold text-dark">
+        <i class="fas fa-image me-2 text-muted"></i> Logo
+      </label>
+      {{ form.logo }}
+    </div>
+
+    <div class="d-flex justify-content-between">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save me-1"></i> Salva modifiche
+      </button>
+      <a href="{% url 'dati_negozio_admin' %}" class="btn btn-secondary">
+        <i class="fas fa-times-circle me-1"></i> Annulla
+      </a>
+    </div>
+  </form>
+</div>
+{% endblock %}

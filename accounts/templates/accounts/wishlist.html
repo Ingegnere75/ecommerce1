@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}La Mia Wishlist{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+<div class="mb-4">
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+  <h2 class="mb-4">💖 La Mia Wishlist</h2>
+
+  {% if wishlist_items %}
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover align-middle">
+        <thead class="table-light">
+          <tr>
+            <th>Immagine</th>
+            <th>Prodotto</th>
+            <th>Prezzo</th>
+            <th>Disponibilità</th>
+            <th>Azioni</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for item in wishlist_items %}
+          <tr>
+            <td style="width: 120px;">
+              <img src="{{ item.prodotto.immagine.url }}" class="img-thumbnail" style="max-height: 100px;">
+            </td>
+            <td>
+              <strong>{{ item.prodotto.nome }}</strong><br>
+              Codice: {{ item.prodotto.codice_prodotto }}
+            </td>
+            <td>€{{ item.prodotto.prezzo }}</td>
+            <td>{{ item.prodotto.disponibilita }}</td>
+            <td>
+              <div class="d-flex gap-2">
+                <a href="{% url 'rimuovi_dalla_wishlist' item.prodotto.id %}" class="btn btn-outline-danger btn-sm">
+                  <i class="fas fa-trash-alt"></i> Rimuovi
+                </a>
+                <a href="{% url 'aggiungi_dalla_wishlist_al_carrello' item.prodotto.id %}" class="btn btn-success btn-sm">
+                  <i class="fas fa-cart-plus"></i> Aggiungi al carrello
+                </a>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="text-muted">La tua wishlist è vuota.</p>
+  {% endif %}
+</div>
+{% endblock %}

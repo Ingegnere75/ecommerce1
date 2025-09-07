@@ -1,0 +1,140 @@
+   {% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block title %}Modifica Banner{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+  <h2 class="mb-4">Modifica Banner</h2>
+
+  <form method="post" enctype="multipart/form-data" class="row g-4">
+    {% csrf_token %}
+
+    <div class="col-md-6">
+      <label class="form-label">Titolo</label>
+      {{ form.titolo|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Sottotitolo</label>
+      {{ form.sottotitolo|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Testo Bottone</label>
+      {{ form.testo_bottone|add_class:"form-control" }}
+    </div>
+
+    <!-- FONT con anteprima -->
+    <div class="col-md-6">
+      <label class="form-label">Font Titolo</label>
+      <select name="font_titolo" id="font_titolo" class="form-select">
+        <option value="">-- Seleziona Font --</option>
+        {% for nome, codice in font %}
+          <option value="{{ codice }}" {% if form.instance.font_titolo == codice %}selected{% endif %}>{{ nome }}</option>
+        {% endfor %}
+      </select>
+    </div>
+
+    <!-- Colore del testo -->
+    <div class="col-md-6">
+      <label class="form-label">Colore Testo</label>
+      <input type="color" name="font_color" id="font_color" class="form-control form-control-color"
+             value="{{ form.instance.font_color|default:'#000000' }}">
+    </div>
+
+    <!-- Anteprima -->
+    <div class="col-md-6">
+      <label class="form-label">Anteprima Titolo</label>
+      <div id="font_preview" class="p-2 border rounded bg-light" style="font-size: 1.5rem;">
+        Testo di Anteprima
+      </div>
+    </div>
+
+    <!-- Colore bottone -->
+    <div class="col-md-6">
+      <label class="form-label">Colore Bottone</label>
+      {{ form.colore_bottone|add_class:"form-control form-control-color" }}
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Larghezza (px)</label>
+      {{ form.larghezza|add_class:"form-control" }}
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Altezza (px)</label>
+      {{ form.altezza|add_class:"form-control" }}
+    </div>
+
+    <!-- Immagine -->
+    <div class="col-md-6">
+      <label class="form-label">Immagine Attuale</label><br>
+      {% if form.instance.immagine_sfondo %}
+        <img src="{{ form.instance.immagine_sfondo.url }}" alt="banner" class="img-thumbnail" style="height: 80px;">
+      {% else %}
+        <p class="text-muted">Nessuna immagine caricata</p>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Cambia Immagine</label>
+      {{ form.immagine_sfondo|add_class:"form-control" }}
+    </div>
+
+    <!-- Video -->
+    <div class="col-md-6">
+      <label class="form-label">Video Attuale</label><br>
+      {% if form.instance.video %}
+        <video src="{{ form.instance.video.url }}" height="80" controls muted></video>
+      {% else %}
+        <p class="text-muted">Nessun video caricato</p>
+      {% endif %}
+    </div>
+
+    <div class="col-md-6">
+      <label class="form-label">Cambia Video</label>
+      {{ form.video|add_class:"form-control" }}
+    </div>
+
+    <div class="col-12">
+      <div class="form-check mt-2">
+        {{ form.visibile|add_class:"form-check-input" }}
+        <label class="form-check-label">{{ form.visibile.label }}</label>
+      </div>
+    </div>
+
+    <div class="col-12 d-flex justify-content-between mt-4">
+      <a href="{% url 'gestione_home' %}" class="btn btn-secondary">Annulla</a>
+      <button type="submit" class="btn btn-primary">Salva Modifiche</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  const fontSelect = document.getElementById("font_titolo");
+  const colorInput = document.getElementById("font_color");
+  const preview = document.getElementById("font_preview");
+
+  if (fontSelect && preview && colorInput) {
+    function aggiornaAnteprima() {
+      preview.style.fontFamily = fontSelect.value;
+      preview.style.color = colorInput.value;
+    }
+
+    fontSelect.addEventListener("change", aggiornaAnteprima);
+    colorInput.addEventListener("input", aggiornaAnteprima);
+
+    // Inizializzazione
+    aggiornaAnteprima();
+  }
+</script>
+{% endblock %}
+

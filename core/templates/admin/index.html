@@ -1,0 +1,14 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+  {{ block.super }}
+
+  <div class="app-admin">
+    <div class="module">
+      <h2>⚙️ Azioni Manuali</h2>
+      <ul>
+        <li><a href="{% url 'elimina_codici_scaduti_admin' %}" class="button">🗑️ Elimina codici sconto scaduti/usati</a></li>
+      </ul>
+    </div>
+  </div>
+{% endblock %}

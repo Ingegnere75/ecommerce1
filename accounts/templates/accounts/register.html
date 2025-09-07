@@ -1,0 +1,125 @@
+{% extends 'base.html' %}
+{% block title %}Registrazione{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+    </a>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-header bg-primary text-white text-center rounded-top-4">
+          <h4 class="mb-0 py-2">📝 Registrazione Utente</h4>
+        </div>
+
+        <div class="card-body px-5 py-4 bg-light">
+
+          <!-- MESSAGGI DJANGO -->
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show rounded-pill text-center" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+          <form method="POST" onsubmit="return validatePassword();">
+            {% csrf_token %}
+            <div class="row g-3">
+
+              <!-- Dati Anagrafici -->
+              <h5 class="text-primary fw-bold">📌 Dati Anagrafici</h5>
+
+              <div class="col-md-6">
+                <input type="text" name="nome" placeholder="Nome" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" name="cognome" placeholder="Cognome" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" name="codice_fiscale" placeholder="Codice Fiscale" class="form-control" maxlength="16" required>
+              </div>
+              <div class="col-md-6">
+                <input type="tel" name="telefono" placeholder="Telefono" class="form-control" required>
+              </div>
+
+              <!-- Indirizzo -->
+              <h5 class="text-primary fw-bold mt-4">🏠 Indirizzo</h5>
+
+              <div class="col-md-6">
+                <input type="text" name="indirizzo" placeholder="Via/Piazza" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <input type="text" name="civico" placeholder="Civico" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <input type="text" name="cap" placeholder="CAP (5 cifre)" pattern="\d{5}" title="Inserisci un CAP di 5 cifre" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <input type="text" name="citta" placeholder="Città" class="form-control" required>
+              </div>
+              <div class="col-md-4">
+                <input type="text" name="provincia" placeholder="Provincia" class="form-control" required>
+              </div>
+
+              <!-- Account -->
+              <h5 class="text-primary fw-bold mt-4">🔐 Credenziali di Accesso</h5>
+
+              <div class="col-md-6">
+                <input type="email" name="email" placeholder="Email" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <input type="password" name="password" id="password" placeholder="Password" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <input type="password" name="password2" id="password2" placeholder="Conferma Password" class="form-control" required>
+              </div>
+
+              <div class="col-12">
+                <div id="password-error" class="text-danger" style="display:none;"></div>
+              </div>
+
+              <div class="col-12 mt-3">
+                <button type="submit" class="btn btn-success w-100 btn-lg rounded-pill">
+                  ✅ Registrati
+                </button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Validazione JS -->
+<script>
+  function validatePassword() {
+    const password = document.getElementById("password").value;
+    const password2 = document.getElementById("password2").value;
+    const errorBox = document.getElementById("password-error");
+
+    const strongPasswordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{8,}$/;
+
+    if (!strongPasswordRegex.test(password)) {
+      errorBox.innerText = "❗ La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un simbolo.";
+      errorBox.style.display = "block";
+      return false;
+    }
+
+    if (password !== password2) {
+      errorBox.innerText = "❗ Le password non coincidono.";
+      errorBox.style.display = "block";
+      return false;
+    }
+
+    errorBox.style.display = "none";
+    return true;
+  }
+</script>
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg rounded-4 p-5">
+                <div class="text-center mb-4">
+                    <h2 class="text-success">💳 Procedi al Pagamento con PayPal</h2>
+                    <p class="lead text-muted">Completa l'acquisto in modo sicuro tramite PayPal.</p>
+                </div>
+
+                <!-- PayPal form -->
+                <form action="{{ paypal_url }}" method="post" class="mt-4">
+                    <!-- Email Business PayPal -->
+                    <input type="hidden" name="business" value="{{ business_email }}">
+
+                    <!-- Tipo di transazione -->
+                    <input type="hidden" name="cmd" value="_xclick">
+
+                    <!-- Dettagli pagamento -->
+                    <input type="hidden" name="item_name" value="Ordine #{{ ordine_id }}">
+                    <input type="hidden" name="amount" value="{{ amount }}">
+                    <input type="hidden" name="currency_code" value="{{ currency_code }}">
+
+                    <!-- Redirect dopo pagamento -->
+                    <input type="hidden" name="return" value="{{ return_url }}">
+                    <input type="hidden" name="cancel_return" value="{{ cancel_url }}">
+
+                    <!-- Bottone di pagamento -->
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="fab fa-paypal me-2"></i> Paga ora con PayPal
+                        </button>
+                    </div>
+                </form>
+
+                <div class="text-center mt-4">
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-secondary">
+                        🔙 Torna alla Dashboard
+                    </a>
+                </div>
+
+                <!-- Informazioni aggiuntive -->
+                <div class="text-muted small text-center mt-3">
+                    I tuoi dati di pagamento saranno protetti e gestiti direttamente da PayPal.
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

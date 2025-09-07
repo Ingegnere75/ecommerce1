@@ -1,0 +1,32 @@
+{% extends "admin/base.html" %}
+{% load static %}
+
+{% block title %}Gestione Samadafilati{% endblock %}
+
+{% block extrahead %}
+    {{ block.super }}
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">Gestione Samadafilati</a>
+</h1>
+{% endblock %}
+
+{% block usertools %}
+    {% if user.is_active and user.is_authenticated %}
+    <div id="user-tools">
+        <span class="me-2">
+            <i class="fa-solid fa-user-shield"></i>
+            <a href="{% url 'admin-dashboard' %}" style="color: inherit; text-decoration: none;">
+                {{ user.username|capfirst }}
+            </a>
+        </span>
+        /
+        <a href="{% url 'admin:password_change' %}">Modifica password</a> /
+        <a href="{% url 'admin:logout' %}">Annulla l'accesso</a>
+    </div>
+    {% endif %}
+{% endblock %}

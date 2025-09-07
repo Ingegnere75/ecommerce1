@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Il Tuo Carrello{% endblock %}
+
+{% block content %}
+<style>
+  @media (max-width: 768px) {
+    table thead {
+      display: none;
+    }
+    table, tbody, tr, td {
+      display: block;
+      width: 100% !important;
+    }
+    tr {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 1rem;
+    }
+    td {
+      text-align: left !important;
+    }
+    td:before {
+      content: attr(data-label);
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    td.d-flex {
+      flex-direction: column !important;
+      align-items: flex-start !important;
+      text-align: left !important;
+    }
+
+    td.d-flex img {
+      margin-bottom: 0.5rem;
+    }
+  }
+</style>
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'prodotti' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna al Negozio
+    </a>
+  </div>
+
+  <h1 class="text-center fw-bold mb-5 text-primary display-4">🛒 Riepilogo Carrello</h1>
+
+  <div class="card shadow-lg rounded-4 p-5 bg-light border-0">
+    <div class="card-body">
+      {% if items %}
+      <!-- Elenco Prodotti -->
+      <div class="table-responsive mb-5">
+        <table class="table align-middle text-center">
+          <thead class="table-light">
+            <tr>
+              <th>Prodotto</th>
+              <th>Prezzo</th>
+              <th>Quantità</th>
+              <th>Subtotale</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in items %}
+            <tr class="bg-white rounded-4 shadow-sm">
+              <td data-label="Prodotto" class="d-flex align-items-center gap-3 text-start">
+                {% if item.prodotto.immagine %}
+                  <img src="{{ item.prodotto.immagine.url }}" class="rounded-3" style="width: 70px; height: 70px; object-fit: cover;">
+                {% else %}
+                  <img src="{% static 'img/no-image.png' %}" class="rounded-3" style="width: 70px; height: 70px; object-fit: cover;">
+                {% endif %}
+                <div>
+                  <h6 class="mb-0 fw-bold">{{ item.prodotto.nome }}</h6>
+                  <small class="text-muted">{{ item.prodotto.descrizione|truncatechars:50 }}</small>
+                </div>
+              </td>
+
+              <td data-label="Prezzo" class="fs-5">
+                {% if item.prodotto.prezzo_scontato < item.prodotto.prezzo %}
+                  <span style="text-decoration: line-through; color: red;">€ {{ item.prodotto.prezzo|floatformat:2 }}</span><br>
+                  <span style="color: green;">€ {{ item.prodotto.prezzo_scontato|floatformat:2 }}</span>
+                {% else %}
+                  € {{ item.prodotto.prezzo|floatformat:2 }}
+                {% endif %}
+              </td>
+
+              <td data-label="Quantità">
+                <form action="{% url 'aggiorna_quantita' item.id %}" method="post" class="d-flex align-items-center gap-2">
+                  {% csrf_token %}
+                  <input type="number" name="quantita" value="{{ item.quantita }}" min="1" class="form-control text-center" style="width: 80px;">
+                  <button type="submit" class="btn btn-outline-success btn-sm rounded-pill">✔️</button>
+                </form>
+              </td>
+
+              <td data-label="Subtotale" class="fs-5 fw-bold">€ {{ item.get_subtotale|floatformat:2 }}</td>
+
+              <td data-label="Azioni">
+                <form action="{% url 'rimuovi_dal_carrello' item.id %}" method="post" onsubmit="return confirm('Sei sicuro di voler rimuovere questo prodotto?')">
+                  {% csrf_token %}
+                  <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill">🗑️</button>
+                </form>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Riepilogo Costi -->
+      <div class="bg-white p-4 rounded-4 shadow-sm mb-4">
+        <h5 class="fw-bold text-primary mb-3">🧾 Riepilogo Totale</h5>
+        <ul class="list-group list-group-flush mb-4">
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Subtotale prodotti</span>
+            <span>€ {{ totale_prodotti|floatformat:2 }}</span>
+          </li>
+          {% if sconto %}
+          <li class="list-group-item d-flex justify-content-between text-success">
+            <span>Sconto ({{ sconto_percentuale }}%)</span>
+            <span>- € {{ sconto|floatformat:2 }}</span>
+          </li>
+          {% endif %}
+          <li class="list-group-item d-flex justify-content-between">
+            <span>Spese di spedizione</span>
+            <span>€ {{ prezzo_spedizione|floatformat:2 }}</span>
+          </li>
+        </ul>
+
+        <div class="d-flex justify-content-between align-items-center fs-4 fw-bold">
+          <span class="text-secondary">Totale Finale:</span>
+          <span class="text-success">€ {{ totale_finale|floatformat:2 }}</span>
+        </div>
+      </div>
+
+      <!-- ✅ Campo Codice Sconto -->
+      <form method="post" class="mb-4">
+        {% csrf_token %}
+        <div class="input-group" style="max-width: 400px;">
+          <input 
+            type="text" 
+            name="codice_sconto" 
+            class="form-control" 
+            placeholder="Hai un codice sconto?" 
+            required 
+            {% if not user.is_authenticated %}readonly{% endif %}
+          >
+          <button class="btn btn-outline-primary" type="submit" {% if not user.is_authenticated %}disabled{% endif %}>
+            Applica
+          </button>
+        </div>
+        {% if not user.is_authenticated %}
+          <small class="text-danger mt-2 d-block">🔒 Devi effettuare il login per applicare uno sconto.</small>
+        {% endif %}
+      </form>
+
+      <!-- Bottone Checkout -->
+      <div class="d-flex justify-content-end">
+        <a href="{% url 'checkout' %}" class="btn btn-success btn-lg rounded-pill shadow-sm px-5">
+          Procedi al Pagamento 💳
+        </a>
+      </div>
+
+      <!-- Blocco rassicurante -->
+      <div class="bg-white p-4 mt-4 rounded-4 shadow-sm text-center">
+        <h5 class="fw-bold text-primary mb-3">Perché acquistare da noi?</h5>
+        <div class="d-flex flex-column flex-md-row justify-content-center gap-4">
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-shield-alt text-success fs-4"></i>
+            <span>Pagamento Sicuro</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-undo text-primary fs-4"></i>
+            <span>Reso Gratuito 14 Giorni</span>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <i class="fas fa-lock text-warning fs-4"></i>
+            <span>Protezione dei Dati</span>
+          </div>
+        </div>
+      </div>
+
+      {% else %}
+      <!-- Carrello Vuoto -->
+      <div class="text-center py-5">
+        <h4 class="fw-bold mb-3">Il tuo carrello è vuoto 🛒</h4>
+        <a href="{% url 'prodotti' %}" class="btn btn-primary btn-lg rounded-pill">Vai allo Shop</a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

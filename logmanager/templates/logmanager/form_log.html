@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Registra Log</title>
+    <link href="{% static 'kaira/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+<section class="container py-5">
+    <h2 class="text-center mb-4">Registra un Log</h2>
+    <form method="post" class="mx-auto" style="max-width: 600px;">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="tipo" class="form-label">Tipo di Log</label>
+            <input type="text" class="form-control" id="tipo" name="tipo" required>
+        </div>
+        <div class="mb-3">
+            <label for="messaggio" class="form-label">Messaggio</label>
+            <textarea class="form-control" id="messaggio" name="messaggio" rows="4"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="url" class="form-label">URL correlato</label>
+            <input type="url" class="form-control" id="url" name="url">
+        </div>
+        <button type="submit" class="btn btn-warning w-100">Registra Log</button>
+    </form>
+</section>
+</body>
+</html>

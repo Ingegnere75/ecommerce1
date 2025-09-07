@@ -1,0 +1,292 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Admin - Samadafilati{% endblock %}
+
+{% block content %}
+
+
+<form method="post" action="{% url 'toggle_maintenance' %}">
+  {% csrf_token %}
+  <button type="submit" 
+          class="btn {% if maintenance_mode %}btn-outline-danger{% else %}btn-outline-success{% endif %} btn-sm rounded-pill shadow-sm px-4 py-2 fw-semibold">
+      {% if maintenance_mode %}
+          <i class="fas fa-times-circle me-1"></i> Disattiva
+      {% else %}
+          <i class="fas fa-wrench me-1"></i> Attiva
+      {% endif %}
+  </button>
+</form>
+  <div class="row g-4">
+    <a href="{% url 'elimina_codici_sconto_admin' %}" class="btn btn-danger">
+  🗑 Elimina codici sconto scaduti o usati
+</a>
+
+    <!-- Magazzino -->
+    <div class="col-md-4">
+      <div class="card border-primary shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-warehouse fa-3x text-success mb-3"></i>
+          <h5 class="card-title">Magazzino</h5>
+          <p class="card-text">Visualizza e modifica i tuoi dati.</p>
+          <a href="{% url 'admin-magazzino' %}" class="btn btn-success w-100">Vai al magazzino</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ordini -->
+    <div class="col-md-4">
+      <div class="card border-primary shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-shopping-cart fa-3x text-success mb-3"></i>
+          <h5 class="card-title">Ordini</h5>
+          <p class="card-text">Gestione ordini.</p>
+          <a href="{% url 'admin-ordini' %}" class="btn btn-success w-100">Vai a ordini</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket -->
+    <div class="col-md-4">
+      <div class="card border-danger shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-ticket-alt fa-3x text-danger mb-3"></i>
+          <h5 class="card-title">Ticket Aperti</h5>
+          <p class="card-text">Controlla ticket generati dai reclami.</p>
+          <a href="{% url 'gestione_reclami' %}" class="btn btn-danger w-100">Visualizza ticket</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Profili -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-users fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Profili</h5>
+          <p class="card-text">Controlla i tuoi utenti.</p>
+          <a href="{% url 'admin-profilo' %}" class="btn btn-info w-100">Visualizza profili</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistiche -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-chart-line fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Statistiche</h5>
+          <p class="card-text">Controlla i tuoi dati e previsioni.</p>
+          <a href="{% url 'admin-statistiche' %}" class="btn btn-info w-100">Visualizza statistiche</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Pagine -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-file-alt fa-3x text-info mb-3"></i>
+          <h5 class="card-title">Pagine</h5>
+          <p class="card-text">Gestisci le pagine informative.</p>
+          <a href="{% url 'lista_pagine' %}" class="btn btn-info w-100">Visualizza Pagine</a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modifica Brand -->
+    <div class="col-md-4">
+      <div class="card border-info shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-bullhorn fa-3x text-warning mb-3"></i>
+          <h5 class="card-title">{{ brand.nome }}</h5>
+          <p class="card-text">Gestisci le impostazioni del brand del sito.</p>
+          <a href="{% url 'vedi_brand' brand.id %}" class="btn btn-warning w-100">
+            Vai a Brand
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modifica Contatti -->
+    <div class="col-md-4">
+      <div class="card border-warning shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-file-alt fa-3x text-warning mb-3"></i>
+          <h5 class="card-title">Elementi della Home</h5>
+          <p class="card-text">Gestisce card e banner della home.</p>
+          <a href="/amministratore/gestione-home/" class="btn btn-warning w-100">
+            Gestione Home
+          </a>
+        </div>
+      </div>
+    </div>
+    
+    
+
+
+    <!-- Messaggi -->
+    <div class="col-md-4">
+      <div class="card border-warning shadow h-100 text-center">
+        <div class="card-body">
+          <i class="fas fa-file-alt fa-3x text-warning mb-3"></i>
+          <h5 class="card-title">Messaggi</h5>
+          <p class="card-text">Gestisci i messaggi di contatto ricevuti.</p>
+          <a href="{% url 'admin-messaggi' %}" class="btn btn-warning w-100">
+            Vai ai messaggi
+            {% if messaggi_non_letti > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger blink">
+                {{ messaggi_non_letti }}
+              </span>
+            {% endif %}
+          </a>
+        </div>
+      </div>
+    </div>
+
+  <!-- Categorie -->
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-layer-group fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Categorie</h5>
+      <p class="card-text">Visualizza Categoria.</p>
+      <a href="{% url 'categorie_list' %}" class="btn btn-info w-100">Categorie</a>
+    </div>
+  </div>
+</div>
+
+<!-- Sottocategorie -->
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-sitemap fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Sottocategorie</h5>
+      <p class="card-text">Controlla le sottocategorie.</p>
+      <a href="{% url 'admin-sottocategoria' %}" class="btn btn-info w-100">Visualizza sottocategorie</a>
+    </div>
+  </div>
+</div>
+
+<!-- Dati Negozio -->
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-store fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Dati Negozio</h5>
+      <p class="card-text">Visualizza e modifica le informazioni del brand.</p>
+      <a href="{% url 'dati_negozio_admin' %}" class="btn btn-info w-100">Visualizza dati negozio</a>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-store fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Cookie</h5>
+      <p class="card-text">Visualizza e modifica le informazioni dei Cookie</p>
+      <a href="{% url 'lista_cookie' %}" class="btn btn-info w-100">Visualizza Cookie</a>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-store fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Altre spese</h5>
+      <p class="card-text">Visualizza e modifica le informazioni delle spese </p>
+      <a href="{% url 'gestione_spese_sconti' %}" class="btn btn-info w-100">Visualizza Spese</a>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-store fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Striscia info</h5>
+      <p class="card-text">Lista strisce</p>
+      <a href="{% url 'lista_strisce_info' %}" class="btn btn-info w-100">Striscia info</a>
+    </div>
+  </div>
+</div>
+<div class="col-md-4">
+  <div class="card border-primary shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-database fa-3x text-primary mb-3"></i>
+      <h5 class="card-title">Raccolta Dati</h5>
+      <p class="card-text">Controlla i contenuti, le richieste e i log raccolti.</p>
+      <a href="{% url 'dashboard-dati' %}" class="btn btn-primary w-100">
+        Vai a Raccolta Dati
+      </a>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-store fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Pagamenti</h5>
+      <p class="card-text">Parametri Pagamenti</p>
+      <a href="{% url 'gestione_pagamenti' %}" class="btn btn-info w-100">Gestori Pagamenti</a>
+    </div>
+  </div>
+</div>
+
+<div class="col-md-4">
+  <div class="card border-info shadow h-100 text-center">
+    <div class="card-body">
+      <i class="fas fa-store fa-3x text-info mb-3"></i>
+      <h5 class="card-title">Blog</h5>
+      <p class="card-text">Blog</p>
+      <a href="{% url 'gestore-blog' %}" class="btn btn-info w-100">Gestore Blog</a>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+    <!-- Django Admin -->
+    {% if request.user.is_staff %}
+    <div class="col-md-12">
+      <div class="card border-dark shadow text-center">
+        <div class="card-body">
+          <i class="fas fa-cogs fa-2x text-dark mb-2"></i>
+          <h5 class="card-title">Pannello Django</h5>
+          <p class="card-text">Accedi all'amministrazione nativa Django.</p>
+          <a href="{% url 'admin:index' %}" class="btn btn-dark">Accedi a Django Admin</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+
+<!-- Stile lampeggiante per badge nuovi messaggi -->
+<style>
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to { visibility: hidden; }
+}
+@-webkit-keyframes blink-animation {
+  to { visibility: hidden; }
+}
+</style>
+
+<!-- Badge extra in alto a destra (es. menu) -->
+{% with messaggi|dictsortreversed:"data_invio" as msg_ord %}
+  {% if msg_ord|length > 0 and msg_ord.0.letto == False %}
+    <span class="badge bg-danger ms-2">Nuovo messaggio!</span>
+  {% endif %}
+{% endwith %}
+{% endblock %}

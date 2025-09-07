@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}Aggiungi Contenuto{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h1 class="fw-bold mb-4">Aggiungi Nuovo Contenuto</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Salva Contenuto</button>
+    </form>
+</div>
+{% endblock %}
+

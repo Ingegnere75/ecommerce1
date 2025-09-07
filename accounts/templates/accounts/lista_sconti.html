@@ -1,0 +1,49 @@
+ {% extends "base.html" %}
+ {% load tz %}  {# abilita il filtro now #}
+
+{% block content %}
+<div class="container mt-5">
+<div class="mb-4">
+    <a href="{% url 'dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+
+  <h2 class="text-center mb-4">I tuoi Codici Sconto</h2>
+  {% if sconti %}
+    <table class="table table-striped table-bordered">
+      <thead class="table-info">
+        <tr>
+          <th>Codice</th>
+          <th>Percentuale</th>
+          <th>Scadenza</th>
+          <th>Utilizzato</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for sconto in sconti %}
+          <tr class="{% if sconto.scadenza < now %}text-decoration-line-through text-muted{% endif %}">
+            <td>{{ sconto.codice }}</td>
+            <td>{{ sconto.percentuale }}%</td>
+            <td>{{ sconto.scadenza|date:"d/m/Y" }}</td>
+            <td>
+              {% if sconto.scadenza < now %}
+                <span class="badge bg-secondary">Scaduto</span>
+              {% elif sconto.is_valido %}
+                <span class="badge bg-success">Non Utilizzato</span>
+              {% else %}
+                <span class="badge bg-danger"> Utilizzato</span>
+              {% endif %}
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <div class="alert alert-warning text-center" role="alert">
+      Non hai codici sconto disponibili.
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

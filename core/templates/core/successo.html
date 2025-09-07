@@ -1,0 +1,121 @@
+  {% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Ordine Completato{% endblock %}
+
+{% block content %}
+<div class="container my-5 text-center">
+
+    {% if ordine %}
+        <!-- Intestazione -->
+        <h1 class="display-4 text-success fw-bold animated fadeIn mb-3">🎉 Grazie per il tuo ordine!</h1>
+        <p class="lead text-muted animated fadeIn">Il tuo ordine è stato ricevuto correttamente.</p>
+        <p class="text-muted">Ordine <strong>#{{ ordine.id }}</strong> – Codice: <strong>{{ ordine.codice_ordine }}</strong></p>
+
+        <!-- Dettagli ordine -->
+        <div class="order-details mt-5 animated fadeInUp">
+            <h3 class="text-primary">📦 Dettagli Ordine</h3>
+            <div class="row mt-4 text-start">
+                <div class="col-md-6">
+                    <p><strong>Nome:</strong> {{ ordine.nome }} {{ ordine.cognome }}</p>
+                    <p><strong>Indirizzo:</strong> {{ ordine.indirizzo }}, {{ ordine.civico }} - {{ ordine.cap }} {{ ordine.citta }} ({{ ordine.provincia }})</p>
+                    <p><strong>Codice Fiscale:</strong> {{ ordine.codice_fiscale }}</p>
+                    <p><strong>Data Ordine:</strong> {{ ordine.data_creazione|date:"d/m/Y H:i" }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Email:</strong> {{ ordine.email }}</p>
+                    <p><strong>Telefono:</strong> {{ ordine.telefono }}</p>
+                    <p><strong>Totale:</strong> €{{ ordine.get_totale|floatformat:2 }}</p>
+                </div>
+            </div>
+
+            {% if ordine.fatturazione_diversa %}
+            <div class="row mt-4 text-start">
+                <h5 class="text-primary">🧾 Dati di Fatturazione</h5>
+                <div class="col-md-6">
+                    <p><strong>Nome:</strong> {{ ordine.nome_fatt }}</p>
+                    <p><strong>Cognome:</strong> {{ ordine.cognome_fatt }}</p>
+                </div>
+                <div class="col-md-6">
+                    <p><strong>Indirizzo:</strong> {{ ordine.indirizzo_fatt }}, {{ ordine.civico_fatt }} - {{ ordine.cap_fatt }} {{ ordine.citta_fatt }} ({{ ordine.provincia_fatt }})</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Articoli acquistati -->
+        {% if articoli %}
+        <div class="mt-5 text-start">
+            <h4 class="fw-bold text-secondary">🛍 Articoli acquistati:</h4>
+            <ul class="list-group mt-3">
+                {% for item in articoli %}
+                <li class="list-group-item d-flex justify-content-between align-items-center rounded shadow-sm mb-2 border-0">
+                    <div class="d-flex align-items-center gap-3">
+                        {% if item.prodotto.immagine %}
+                            <img src="{{ item.prodotto.immagine.url }}" alt="{{ item.prodotto.nome }}" class="rounded" style="width: 60px; height: 60px; object-fit: cover;">
+                        {% else %}
+                            <img src="{% static 'img/no-image.png' %}" class="rounded" style="width: 60px; height: 60px;">
+                        {% endif %}
+                        <div>
+                            <div class="fw-bold">{{ item.prodotto.nome }}</div>
+                            <div class="text-muted small">Quantità: {{ item.quantita }}</div>
+                        </div>
+                    </div>
+                    <div class="fw-bold text-end">€ {{ item.get_subtotale|floatformat:2 }}</div>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+
+    {% else %}
+        <div class="alert alert-danger mt-5">Ordine non trovato.</div>
+    {% endif %}
+
+    <!-- Azioni -->
+    <div class="cta-buttons mt-5 animated fadeInUp">
+        <a href="{% url 'home' %}" class="btn btn-outline-primary btn-lg mx-2">🏠 Torna alla Home</a>
+        <a href="{% url 'prodotti' %}" class="btn btn-outline-success btn-lg mx-2">🛒 Continua a fare shopping</a>
+    </div>
+
+    <div class="text-center mt-5 animated fadeIn">
+        <button onclick="scrollToTop()" class="btn btn-secondary">⬆️ Torna su</button>
+    </div>
+</div>
+
+<!-- Scroll to Top -->
+<script>
+    function scrollToTop() {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+</script>
+
+<!-- Animazioni -->
+<style>
+    .animated { animation-duration: 1s; animation-fill-mode: both; }
+    .fadeIn { animation-name: fadeIn; }
+    .fadeInUp { animation-name: fadeInUp; }
+
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes fadeInUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+</style>
+
+<!-- Messaggio finale -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        Swal.fire({
+            title: '🎉 Ordine completato!',
+            text: 'Grazie per aver acquistato da noi! 🚀 Verrai reindirizzato a breve...',
+            icon: 'success',
+            showConfirmButton: false,
+            timer: 5000,
+            timerProgressBar: true,
+            didClose: () => {
+                window.location.href = '{% url "prodotti" %}';
+            }
+        });
+    });
+</script>
+{% endblock %}
+

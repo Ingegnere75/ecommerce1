@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% include 'includes/sconto_categoria.html' with categoria=categoria %}
+
+
+{% block title %}{{ categoria.nome }} - Samadafilati{% endblock %}
+
+{% block content %}
+<section class="py-5">
+  <div class="mb-4">
+    <a href="{% url 'prodotti' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna al Negozio
+    </a>
+  </div>
+  <div class="container">
+    <h2 class="text-center fw-bold mb-5">{{ categoria.nome }}</h2>
+    
+    <div class="row justify-content-center">
+      {% for prodotto in prodotti %}
+      <div class="col-md-4 col-lg-3 mb-4">
+        <div class="card h-100">
+          <img src="{{ prodotto.immagine.url }}"
+               alt="{{ prodotto.nome }}"
+               class="card-img-top"
+               style="height: 250px; object-fit: cover;">
+          <div class="card-body text-center">
+            <h5 class="card-title">{{ prodotto.nome }}</h5>
+            <p class="card-text">{{ prodotto.descrizione|truncatechars:100 }}</p>
+            <p class="fw-bold text-primary">€ {{ prodotto.prezzo }}</p>
+            <a href="{% url 'dettaglio_prodotto' prodotto.id %}" class="btn btn-outline-dark w-100">Dettagli</a>
+          </div>
+        </div>
+      </div>
+      {% empty %}
+        <p class="text-center">Nessun prodotto disponibile per questa categoria.</p>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+{% endblock %}

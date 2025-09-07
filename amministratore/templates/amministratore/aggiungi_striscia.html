@@ -1,0 +1,106 @@
+
+
+{% extends 'base.html' %}
+
+{% load static %}
+
+{% block content %}
+
+
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-xl-7 col-lg-8 col-md-10">
+      <div class="card shadow-lg border-0 rounded-4">
+        <div class="card-body p-5">
+          <h4 class="card-title text-center mb-4">
+            <i class="fas fa-plus-circle text-success me-2"></i>
+            Aggiungi Nuova Striscia Informativa
+          </h4>
+
+          <form method="post" novalidate>
+            {% csrf_token %}
+            <div class="row g-4">
+
+              <!-- Titolo -->
+              <div class="col-12">
+                <label for="{{ form.titolo.id_for_label }}" class="form-label fw-semibold">Titolo</label>
+                {{ form.titolo }}
+                {% if form.titolo.help_text %}
+                  <div class="form-text">{{ form.titolo.help_text }}</div>
+                {% endif %}
+                {% for error in form.titolo.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <!-- Testo -->
+              <div class="col-12">
+                <label for="{{ form.testo.id_for_label }}" class="form-label fw-semibold">Testo</label>
+                <textarea name="{{ form.testo.name }}" cols="40" rows="4" class="form-control">{{ form.testo.value }}</textarea>
+                {% if form.testo.help_text %}
+                  <div class="form-text">{{ form.testo.help_text }}</div>
+                {% endif %}
+                {% for error in form.testo.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <!-- Attiva -->
+              <div class="col-12">
+                <label class="form-label fw-semibold">Attiva</label><br>
+                {{ form.attiva }}
+                {% for error in form.attiva.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <!-- Luogo -->
+              <div class="col-12">
+                <label for="{{ form.luogo.id_for_label }}" class="form-label fw-semibold">Luogo</label>
+                {{ form.luogo }}
+                {% for error in form.luogo.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+              </div>
+
+              <!-- Colore sfondo -->
+              <div class="col-md-6">
+                <label for="{{ form.colore_sfondo.id_for_label }}" class="form-label fw-semibold">Colore Sfondo</label>
+                <input type="color" name="{{ form.colore_sfondo.name }}" value="{{ form.colore_sfondo.value }}" class="form-control form-control-color" />
+              </div>
+
+              <!-- Colore testo -->
+              <div class="col-md-6">
+                <label for="{{ form.colore_testo.id_for_label }}" class="form-label fw-semibold">Colore Testo</label>
+                <input type="color" name="{{ form.colore_testo.name }}" value="{{ form.colore_testo.value }}" class="form-control form-control-color" />
+              </div>
+
+              <!-- Velocità -->
+              <div class="col-12">
+                <label for="{{ form.velocita.id_for_label }}" class="form-label fw-semibold">Velocità</label>
+                {{ form.velocita }}
+                {% if form.velocita.help_text %}
+                  <div class="form-text">{{ form.velocita.help_text }}</div>
+                {% endif %}
+                {% for error in form.velocita.errors %}
+                  <div class="invalid-feedback d-block">{{ error }}</div>
+                {% endfor %}
+              </div>
+            </div>
+
+            <div class="mt-5 d-flex justify-content-between align-items-center">
+              <a href="{% url 'lista_strisce_info' %}" class="btn btn-outline-secondary px-4">
+                <i class="fas fa-arrow-left me-2"></i> Annulla
+              </a>
+              <button type="submit" class="btn btn-success px-4">
+                <i class="fas fa-check me-2"></i> Salva Striscia
+              </button>
+            </div>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

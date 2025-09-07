@@ -1,0 +1,197 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editor Home{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="fw-bold mb-4 text-center">Editor Visuale - Pagina Home</h2>
+
+  <div class="alert alert-info">
+    Trascina, ridimensiona e modifica gli elementi nel canvas centrale. Per rimuovere clicca su <strong>❌</strong>.
+  </div>
+
+  <div class="d-flex gap-4">
+    <!-- Pannello laterale -->
+    <div class="p-3 border shadow-sm bg-light" style="min-width: 220px;">
+      <h5 class="fw-bold">Elementi</h5>
+      <button class="btn btn-outline-dark w-100 my-1" onclick="addBanner()">➕ Banner</button>
+      <button class="btn btn-outline-dark w-100 my-1" onclick="addText()">📝 Testo</button>
+      <button class="btn btn-outline-dark w-100 my-1" onclick="addCard()">🛆 Card</button>
+      <button class="btn btn-outline-dark w-100 my-1" onclick="addVideo()">🎮 Video</button>
+      <button class="btn btn-outline-dark w-100 my-1" onclick="addTextBox()">🔓 TextBox</button>
+      <button class="btn btn-outline-dark w-100 my-1" onclick="addCheckbox()">✅ Checkbox</button>
+      <button class="btn btn-outline-dark w-100 my-1" onclick="addLink()">🔗 Link</button>
+      <button class="btn btn-success w-100 mt-3" onclick="salvaLayout()">📂 Salva Layout</button>
+    </div>
+
+    <!-- Area centrale -->
+    <div id="canvas" class="flex-fill border rounded p-3 shadow-sm bg-white min-vh-100">
+      <!-- Qui appariranno gli elementi -->
+    </div>
+  </div>
+</div>
+
+<!-- Interact.js -->
+<script src="https://cdn.jsdelivr.net/npm/interactjs/dist/interact.min.js"></script>
+
+<script>
+function addBanner() {
+  const el = document.createElement("div");
+  el.className = "draggable resizable border p-3 mb-3 shadow position-relative bg-white";
+  el.innerHTML = `
+    <img src="https://via.placeholder.com/600x200" class="img-fluid mb-2" alt="Banner">
+    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="this.parentElement.remove()">❌</button>
+  `;
+  document.getElementById("canvas").appendChild(el);
+  initInteract(el);
+}
+
+function addText() {
+  const el = document.createElement("div");
+  el.className = "draggable resizable border p-3 mb-3 shadow position-relative bg-white";
+  el.innerHTML = `
+    <textarea class="form-control mb-2" placeholder="Scrivi qui il testo"></textarea>
+    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="this.parentElement.remove()">❌</button>
+  `;
+  document.getElementById("canvas").appendChild(el);
+  initInteract(el);
+}
+
+function addCard() {
+  const el = document.createElement("div");
+  el.className = "draggable resizable border p-3 mb-3 shadow position-relative bg-white";
+  el.innerHTML = `
+    <img src="https://via.placeholder.com/300x200" class="img-fluid mb-2" alt="Card">
+    <h5 class="fw-bold">Titolo Card</h5>
+    <p class="text-muted small">Descrizione card</p>
+    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="this.parentElement.remove()">❌</button>
+  `;
+  document.getElementById("canvas").appendChild(el);
+  initInteract(el);
+}
+
+function addVideo() {
+  const el = document.createElement("div");
+  el.className = "draggable resizable border p-3 mb-3 shadow position-relative bg-white";
+  el.innerHTML = `
+    <video class="w-100 mb-2" controls>
+      <source src="https://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4">
+      Il tuo browser non supporta il video.
+    </video>
+    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="this.parentElement.remove()">❌</button>
+  `;
+  document.getElementById("canvas").appendChild(el);
+  initInteract(el);
+}
+
+function addTextBox() {
+  const el = document.createElement("div");
+  el.className = "draggable resizable border p-3 mb-3 shadow position-relative bg-white";
+  el.innerHTML = `
+    <input type="text" class="form-control mb-2" placeholder="Inserisci testo...">
+    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="this.parentElement.remove()">❌</button>
+  `;
+  document.getElementById("canvas").appendChild(el);
+  initInteract(el);
+}
+
+function addCheckbox() {
+  const el = document.createElement("div");
+  el.className = "draggable resizable border p-3 mb-3 shadow position-relative bg-white";
+  el.innerHTML = `
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" id="checkExample">
+      <label class="form-check-label" for="checkExample">Accetta</label>
+    </div>
+    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="this.parentElement.remove()">❌</button>
+  `;
+  document.getElementById("canvas").appendChild(el);
+  initInteract(el);
+}
+
+function addLink() {
+  const el = document.createElement("div");
+  el.className = "draggable resizable border p-3 mb-3 shadow position-relative bg-white";
+  el.innerHTML = `
+    <a href="#" class="text-decoration-underline text-primary">Clicca qui</a>
+    <button class="btn btn-sm btn-danger position-absolute top-0 end-0 m-1" onclick="this.parentElement.remove()">❌</button>
+  `;
+  document.getElementById("canvas").appendChild(el);
+  initInteract(el);
+}
+
+function salvaLayout() {
+  const layout = [];
+  const canvas = document.getElementById("canvas").children;
+  for (let el of canvas) {
+    layout.push({
+      html: el.innerHTML,
+      tipo: el.querySelector("img") ? "banner" :
+            el.querySelector("textarea") ? "text" :
+            el.querySelector("video") ? "video" :
+            el.querySelector("input[type='text']") ? "textbox" :
+            el.querySelector("input[type='checkbox']") ? "checkbox" :
+            el.querySelector("a") ? "link" : "card"
+    });
+  }
+
+  fetch("{% url 'salva_layout' %}", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json',
+      'X-CSRFToken': '{{ csrf_token }}'
+    },
+    body: JSON.stringify(layout)
+  }).then(res => res.json())
+    .then(data => {
+      if (data.status === "success") {
+        alert("✅ Layout salvato!");
+      } else {
+        alert("❌ Errore nel salvataggio.");
+      }
+    });
+}
+
+function initInteract(target) {
+  interact(target)
+    .draggable({
+      inertia: true,
+      modifiers: [interact.modifiers.restrictRect({ restriction: 'parent', endOnly: true })],
+      listeners: {
+        move (event) {
+          const x = (parseFloat(event.target.getAttribute('data-x')) || 0) + event.dx;
+          const y = (parseFloat(event.target.getAttribute('data-y')) || 0) + event.dy;
+          event.target.style.transform = `translate(${x}px, ${y}px)`;
+          event.target.setAttribute('data-x', x);
+          event.target.setAttribute('data-y', y);
+        }
+      }
+    })
+    .resizable({
+      edges: { left: true, right: true, bottom: true, top: true },
+      modifiers: [
+        interact.modifiers.restrictEdges({ outer: 'parent' }),
+        interact.modifiers.restrictSize({ min: { width: 150, height: 100 } })
+      ],
+      listeners: {
+        move(event) {
+          let { x, y } = event.target.dataset;
+          x = parseFloat(x) || 0;
+          y = parseFloat(y) || 0;
+
+          event.target.style.width  = `${event.rect.width}px`;
+          event.target.style.height = `${event.rect.height}px`;
+
+          x += event.deltaRect.left;
+          y += event.deltaRect.top;
+
+          event.target.style.transform = `translate(${x}px, ${y}px)`;
+          event.target.setAttribute('data-x', x);
+          event.target.setAttribute('data-y', y);
+        }
+      }
+    });
+}
+</script>
+{% endblock %}

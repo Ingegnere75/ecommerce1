@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h2 class="text-primary">💸 Gestione Spese di Spedizione e Codici Sconto</h2>
+
+  <div class="row mt-4">
+    <!-- Modifica Spedizione -->
+    <div class="col-md-6">
+      <div class="card border-info shadow">
+        <div class="card-header bg-info text-white">
+          Modifica Prezzo Spedizione
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {{ spedizione_form.as_p }}
+            <button type="submit" name="salva_spedizione" class="btn btn-info w-100">Salva</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Invia Codice Sconto -->
+    <div class="col-md-6">
+      <div class="card border-success shadow">
+        <div class="card-header bg-success text-white">
+          Invia Codice Sconto ad un Utente
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            {{ sconto_form.as_p }}
+            <button type="submit" name="invia_sconto" class="btn btn-success w-100">Genera e Invia</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Elenco Codici -->
+  <div class="mt-5">
+    <h4 class="mb-3">📋 Codici Sconto Inviati</h4>
+    <table class="table table-bordered table-hover text-center">
+      <thead class="table-light">
+        <tr>
+          <th>Utente</th>
+          <th>Email</th>
+          <th>Codice</th>
+          <th>Sconto (%)</th>
+          <th>Usato</th>
+          <th>Data Invio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for codice in codici_sconto %}
+        <tr>
+          <td>{{ codice.utente.username }}</td>
+          <td>{{ codice.utente.email }}</td>
+          <td><code>{{ codice.codice }}</code></td>
+          <td>{{ codice.percentuale }}%</td>
+          <td>{% if codice.usato %}✅{% else %}❌{% endif %}</td>
+          <td>{{ codice.data_creazione|date:"d/m/Y H:i" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="6">Nessun codice sconto disponibile.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

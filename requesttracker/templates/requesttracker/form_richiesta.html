@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <title>Salva Contenuto</title>
+    <link href="{% static 'kaira/css/style.css' %}" rel="stylesheet">
+</head>
+<body>
+<section class="container py-5">
+    <h2 class="text-center mb-4">Inserisci un nuovo contenuto</h2>
+    <form method="post" class="mx-auto" style="max-width: 600px;">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="titolo" class="form-label">Titolo</label>
+            <input type="text" class="form-control" id="titolo" name="titolo" required>
+        </div>
+        <div class="mb-3">
+            <label for="contenuto" class="form-label">Contenuto</label>
+            <textarea class="form-control" id="contenuto" name="contenuto" rows="4"></textarea>
+        </div>
+        <div class="mb-3">
+            <label for="url" class="form-label">URL</label>
+            <input type="url" class="form-control" id="url" name="url">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Salva Contenuto</button>
+    </form>
+</section>
+</body>
+</html>

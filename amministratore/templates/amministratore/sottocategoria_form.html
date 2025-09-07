@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% load form_tags %}
+
+{% block title %}{{ titolo }}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Pulsante indietro -->
+  <div class="mb-4 text-start">
+  <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-primary rounded-pill shadow-sm d-inline-flex align-items-center px-4 py-2">
+    <i class="fas fa-arrow-left me-2"></i> Torna alla pagina precedente
+  </a>
+</div>
+
+  <!-- Titolo -->
+  <h2 class="mb-4 text-primary fw-bold">{{ titolo }}</h2>
+
+  <!-- Form -->
+  <form method="post" enctype="multipart/form-data" class="bg-white shadow p-5 rounded-4 border border-1">
+    {% csrf_token %}
+    <div class="row g-3">
+
+      <!-- Nome -->
+      <div class="col-md-6">
+        <label for="id_nome" class="form-label">Nome sottocategoria</label>
+        {{ form.nome|add_class:"form-control" }}
+      </div>
+
+      <!-- Categoria -->
+      <div class="col-md-6">
+        <label for="id_categoria" class="form-label">Categoria</label>
+        {{ form.categoria|add_class:"form-select" }}
+      </div>
+
+      <!-- Slug -->
+      <div class="col-md-6">
+        <label for="id_slug" class="form-label">Slug</label>
+        {{ form.slug|add_class:"form-control" }}
+      </div>
+
+      <!-- Codice -->
+      <div class="col-md-6">
+        <label for="id_codice" class="form-label">Codice</label>
+        {{ form.codice|add_class:"form-control" }}
+      </div>
+
+      <!-- Immagine -->
+      <div class="col-md-6">
+        <label for="id_immagine" class="form-label">Immagine</label>
+        {{ form.immagine|add_class:"form-control" }}
+      </div>
+
+      <!-- Larghezza -->
+      <div class="col-md-6">
+        <label for="id_larghezza" class="form-label">Larghezza</label>
+        {{ form.larghezza|add_class:"form-control" }}
+      </div>
+
+      <!-- Altezza -->
+      <div class="col-md-6">
+        <label for="id_altezza" class="form-label">Altezza</label>
+        {{ form.altezza|add_class:"form-control" }}
+      </div>
+
+      <!-- Contenuto larghezza -->
+      <div class="col-md-6">
+        <label for="id_contenuto_larghezza" class="form-label">Larghezza contenuto (px)</label>
+        {{ form.contenuto_larghezza|add_class:"form-control" }}
+      </div>
+
+      <!-- Contenuto altezza -->
+      <div class="col-md-6">
+        <label for="id_contenuto_altezza" class="form-label">Altezza contenuto (px)</label>
+        {{ form.contenuto_altezza|add_class:"form-control" }}
+      </div>
+
+      <!-- Descrizione -->
+      <div class="col-12">
+        <label for="id_descrizione" class="form-label">Descrizione</label>
+        {{ form.descrizione|add_class:"form-control" }}
+      </div>
+
+      <!-- Contenuto HTML personalizzato -->
+      <div class="col-12">
+        <label for="id_contenuto_html" class="form-label">Contenuto personalizzato</label>
+        {{ form.contenuto_html|add_class:"form-control" }}
+      </div>
+
+    </div>
+
+    <!-- Bottoni -->
+    <div class="mt-4 d-flex gap-3">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-save me-1"></i> Salva
+      </button>
+      <a href="{% url 'categorie_list' %}" class="btn btn-secondary">Annulla</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

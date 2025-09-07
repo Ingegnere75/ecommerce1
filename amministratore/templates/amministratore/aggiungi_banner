@@ -1,0 +1,29 @@
+  {% extends 'base.html' %}
+  {% load static widget_tweaks %}
+
+{% block title %}Aggiungi Banner{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+  <h3 class="mb-4 text-primary">Aggiungi nuovo Banner</h3>
+  <form method="post" enctype="multipart/form-data" class="card p-4 shadow-sm">
+    {% csrf_token %}
+    {% for field in form %}
+      <div class="mb-3">
+        <label class="form-label">{{ field.label }}</label>
+        {{ field|add_class:"form-control" }}
+        {% if field.help_text %}
+          <div class="form-text">{{ field.help_text }}</div>
+        {% endif %}
+      </div>
+    {% endfor %}
+    <button type="submit" class="btn btn-success">Salva</button>
+    <a href="{% url 'gestione_home' %}" class="btn btn-secondary">Annulla</a>
+  </form>
+</div>
+{% endblock %}

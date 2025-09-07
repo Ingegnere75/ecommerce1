@@ -1,0 +1,129 @@
+<footer class="mt-5 pt-4 bg-light w-100">
+  <div class="container px-4 text-center text-md-start">
+    <div class="row gy-4 justify-content-center">
+
+      <!-- Brand -->
+      <div class="col-sm-12 col-md-3 d-flex flex-column align-items-center align-items-md-start">
+        <h6 class="fw-bold text-uppercase">{{ brand.nome }} </h6>
+        <p class="small mb-3"><i class="fas fa-info-circle me-2"></i> {{ brand.descrizione }}</p>
+
+        {% if brand.link %}
+          <a href="{{ brand.link }}" target="_blank" class="btn btn-outline-dark btn-sm mb-3">
+            <i class="fas fa-globe me-1"></i> Vai al sito
+          </a>
+        {% endif %}
+      </div>
+
+      <!-- Menu -->
+      <div class="col-sm-6 col-md-2">
+        <h6 class="fw-bold text-uppercase">Informazioni </h6>
+        <ul class="list-unstyled small">
+          <li><a href="{% url 'pagina_dinamica' slug='chi_siamo' %}" class="text-muted text-decoration-none">Chi Siamo</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='sostenibilita' %}" class="text-muted text-decoration-none">Sostenibilità</a></li>
+          <li><a href="{% url 'contatti' %}" class="text-muted text-decoration-none">Parla con noi</a></li>
+        </ul>
+      </div>
+
+      <!-- Assistenza -->
+      <div class="col-sm-6 col-md-4">
+        <h6 class="fw-bold text-uppercase">Assistenza</h6>
+        <ul class="list-unstyled small row row-cols-2 g-1">
+          <li><a href="{% url 'pagina_dinamica' slug='faq' %}" class="text-muted text-decoration-none">FAQ</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='spedizione' %}" class="text-muted text-decoration-none">Spedizione</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='resi' %}" class="text-muted text-decoration-none">Resi</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='termini_condizioni' %}" class="text-muted text-decoration-none">Termini e Condizioni</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='trattamento_dati' %}" class="text-muted text-decoration-none">Trattamento Dati</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='informativa_privacy' %}" class="text-muted text-decoration-none">Privacy</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='cookie' %}" class="text-muted text-decoration-none">Cookie</a></li>
+          <li><a href="{% url 'pagina_dinamica' slug='pagamenti' %}" class="text-muted text-decoration-none">Pagamenti</a></li>
+        </ul>
+      </div>
+
+      <!-- Contatti -->
+      <div class="col-sm-12 col-md-3 d-flex flex-column align-items-center align-items-md-start">
+        <h6 class="fw-bold text-uppercase">Contatti</h6>
+        <p class="small mb-1"><i class="fas fa-store me-2"></i> {{ contatti_brand.nome }}</p>
+        <p class="small mb-1"><i class="fas fa-map-marker-alt me-2"></i> {{ contatti_brand.indirizzo }}</p>
+        <p class="small mb-1"><i class="fas fa-city me-2"></i> {{ contatti_brand.cap_citta }}</p>
+        <p class="small mb-1"><i class="fas fa-envelope me-2"></i>
+          <a href="mailto:{{ contatti_brand.email }}" class="text-decoration-none text-dark">{{ contatti_brand.email }}</a></p>
+        <p class="small mb-1"><i class="fas fa-phone me-2"></i>
+          <a href="tel:{{ contatti_brand.telefono }}" class="text-decoration-none text-dark">{{ contatti_brand.telefono }}</a></p>
+        <p class="small mb-1"><i class="fas fa-id-card me-2"></i> P.IVA: {{ contatti_brand.partita_iva }}</p>
+      </div>
+    </div>
+
+    <hr class="my-4">
+
+    <!-- Social & Copyright -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-center">
+      <p class="small text-muted mb-2 mb-md-0">© 2025 Ing.D.Marmora Tutti i diritti riservati.</p>
+      <div class="d-flex gap-3">
+        {% if brand.facebook %}
+          <a class="text-primary fs-4" href="{{ brand.facebook }}" target="_blank"><i class="fab fa-facebook-f"></i></a>
+        {% endif %}
+        {% if brand.twitter %}
+          <a class="text-info fs-4" href="{{ brand.twitter }}" target="_blank"><i class="fab fa-twitter"></i></a>
+        {% endif %}
+        {% if brand.instagram %}
+          <a class="text-danger fs-4" href="{{ brand.instagram }}" target="_blank"><i class="fab fa-instagram"></i></a>
+        {% endif %}
+        {% if brand.youtube %}
+          <a class="text-danger fs-4" href="{{ brand.youtube }}" target="_blank"><i class="fab fa-youtube"></i></a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  {% if striscia_info_footer %}
+  <div class="striscia-scorrente" style="background-color: {{ striscia_info_footer.colore_sfondo }}; color: {{ striscia_info_footer.colore_testo }};">
+    <div class="scorri-wrapper" style="--velocita: {{ striscia_info_footer.velocita }}s;">
+      <div class="scorri-contenuto">
+        <span>{{ striscia_info_footer.testo }}</span>
+        <span>{{ striscia_info_footer.testo }}</span> <!-- duplicato per scorrimento continuo -->
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<style>
+  /* === STRISCIA INFO SCORREVOLE (destra ➜ sinistra, loop continuo fluido) === */
+ /* === STRISCIA INFO SCORREVOLE (loop continuo) === */
+.striscia-scorrente {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  font-size: 1.6rem;
+  font-weight: bold;
+}
+
+.scorri-wrapper {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.scorri-contenuto {
+  display: flex;
+  white-space: nowrap;
+  animation: scorri-loop var(--velocita, 50s) linear infinite;
+}
+
+.scorri-contenuto span {
+  padding-right: 4rem;
+  display: inline-block;
+}
+
+/* ⚙️ COMANDO CHE DETERMINA LA DIREZIONE (da destra verso sinistra) */
+@keyframes scorri-loop {
+  0% { transform: translateX(0%); }
+  100% { transform: translateX(-50%); }
+}
+
+</style>
+
+
+  

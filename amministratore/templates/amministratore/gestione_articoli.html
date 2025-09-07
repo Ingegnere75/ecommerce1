@@ -1,0 +1,54 @@
+    {% extends 'base.html' %}
+{% load static %}
+{% load admin_urls %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="text-success fw-bold">📰 Gestione Articoli Blog</h2>
+    <a href="{% url 'admin:blog_articoloblog_add' %}" class="btn btn-success rounded-pill">➕ Nuovo Articolo</a>
+  </div>
+
+  <div class="card shadow-sm border-0 rounded-4">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle text-center">
+          <thead class="table-success">
+            <tr>
+              <th>Titolo</th>
+              <th>Pubblicato il</th>
+              <th>Slug</th>
+              <th>Azioni</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for a in articoli %}
+              <tr>
+                <td>{{ a.titolo }}</td>
+                <td>{{ a.data_pubblicazione|date:"d/m/Y H:i" }}</td>
+                <td>{{ a.slug }}</td>
+                <td>
+                  <a href="{% url 'admin:blog_articoloblog_change' a.id %}" class="btn btn-warning btn-sm rounded-circle" title="Modifica">
+                    ✏️
+                  </a>
+                  <a href="{% url 'admin:blog_articoloblog_delete' a.id %}" class="btn btn-danger btn-sm rounded-circle" title="Elimina">
+                    🗑
+                  </a>
+                </td>
+              </tr>
+            {% empty %}
+              <tr>
+                <td colspan="4">Nessun articolo presente.</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      <div class="text-end">
+        <a href="{% url 'gestore-blog' %}" class="btn btn-outline-secondary rounded-pill">↩ Torna al Pannello Blog</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

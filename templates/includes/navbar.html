@@ -1,0 +1,155 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm sticky-top py-3" style="font-family: 'Segoe UI', sans-serif;">
+  <div class="container">
+
+    <!-- Brand -->
+    <a class="navbar-brand fw-bold d-flex align-items-center gap-2" href="{% url 'home' %}" style="font-size: 1.6rem; color: #003366;">
+      {% if contatti_brand.logo %}
+        <img src="{{ contatti_brand.logo.url }}"  style="height: 80px;width: 250px; object-fit: contain;">
+      {% else %}
+        <i class="fas fa-gem me-1 text-primary"></i>
+      {% endif %}
+    </a>
+
+    <!-- Hamburger -->
+    <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Navbar links -->
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+
+      <!-- Menu principale -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.resolver_match.url_name == 'home' %}active fw-bold text-primary{% endif %}" href="{% url 'home' %}">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link px-3 {% if request.resolver_match.url_name == 'prodotti' %}active fw-bold text-primary{% endif %}" href="{% url 'prodotti' %}">Negozio</a>
+        </li>
+      </ul>
+
+      <!-- Ricerca al centro -->
+      <form class="d-flex mx-auto" method="get" action="{% url 'ricerca' %}" style="max-width: 400px;">
+        <div class="input-group">
+          <input class="form-control border-end-0" type="search" placeholder="Cerca prodotti..." name="q" aria-label="Cerca">
+          <button class="btn btn-outline-secondary" type="submit"><i class="fas fa-search"></i></button>
+        </div>
+      </form>
+
+      <!-- Lato destro: autenticazione e carrello -->
+      <ul class="navbar-nav align-items-center">
+
+        <!-- Carrello sempre visibile -->
+        <li class="nav-item position-relative me-3">
+          <a class="nav-link" href="{% url 'carrello' %}">
+            <i class="fas fa-shopping-cart fs-5 {% if carrello_totale_elementi > 0 %}text-warning{% else %}text-muted{% endif %}"></i>
+            {% if carrello_totale_elementi > 0 %}
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                {{ carrello_totale_elementi }}
+              </span>
+            {% endif %}
+          </a>
+        </li>
+
+        {% if user.is_authenticated %}
+          {% if user.is_staff or user.is_superuser %}
+          <li class="nav-item me-3">
+            <a class="nav-link text-dark" href="{% url 'admin-dashboard' %}">
+              <i class="fas fa-user-shield me-1 text-secondary"></i> Admin
+            </a>
+          </li>
+          {% else %}
+          <li class="nav-item me-3">
+            <a class="nav-link text-dark" href="{% url 'dashboard' %}">
+              <i class="fas fa-user-circle me-1 text-secondary"></i> Account
+            </a>
+          </li>
+          {% endif %}
+          <li class="nav-item">
+            <a class="nav-link text-dark" href="{% url 'logout' %}">
+              <i class="fas fa-sign-out-alt me-1 text-danger"></i> Esci
+            </a>
+          </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="{% url 'login' %}">
+            <i class="fas fa-sign-in-alt me-1 text-primary"></i> Accedi
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-dark" href="{% url 'register' %}">
+            <i class="fas fa-user-plus me-1 text-success"></i> Registrati
+          </a>
+        </li>
+        {% endif %}
+
+        <!-- Traduttore Google -->
+        <li class="nav-item ms-3">
+          <div id="google_translate_element"></div>
+        </li>
+
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!-- Striscia informativa -->
+{% if striscia_info_navbar %}
+  <div class="striscia-scorrente" style="background-color: {{ striscia_info_navbar.colore_sfondo }}; color: {{ striscia_info_navbar.colore_testo }};">
+    <div class="scorri-wrapper" style="--velocita: {{ striscia_info_navbar.velocita }}s;">
+      <div class="scorri-contenuto">
+        <span>{{ striscia_info_navbar.testo }}</span>
+        <span>{{ striscia_info_navbar.testo }}</span>
+      </div>
+    </div>
+  </div>
+{% endif %}
+
+<!-- Google Translate Script -->
+<style>
+  /* Nasconde logo Google */
+  .goog-logo-link,
+  .goog-te-gadget span:not(.goog-te-combo) {
+    display: none !important;
+  }
+
+  /* Contenitore visibile "Lingua" + dropdown */
+  #google_translate_element {
+    background-color: transparent;
+    color: #444;
+    font-size: 14px;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+  }
+
+  #google_translate_element::before {
+    content: "🌐 Lingua:";
+    color: #444;
+    font-weight: 500;
+    margin-right: 5px;
+  }
+
+  /* Combo traduzione */
+  .goog-te-combo {
+    background-color: #f8f9fa;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+    color: #333;
+    padding: 2px 6px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+</style>
+
+<script type="text/javascript">
+  function googleTranslateElementInit() {
+    new google.translate.TranslateElement({
+      pageLanguage: 'it',
+      includedLanguages: 'en,de,es,zh-CN,ja,fr,ro,uk',
+      layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+      autoDisplay: false
+    }, 'google_translate_element');
+  }
+</script>
+<script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>

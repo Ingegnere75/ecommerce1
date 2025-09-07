@@ -1,0 +1,126 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Dashboard Globale - Admin{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h1 class="fw-bold text-center mb-5">Dashboard Globale</h1>
+
+    <!-- Cards contatori -->
+    <div class="row g-4 mb-5 text-center">
+
+        <div class="col-md-3">
+            <div class="card border-primary shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Contenuti</h5>
+                    <p class="display-4">{{ contenuti.count }}</p>
+                    <a href="{% url 'contenuti-lista' %}" class="btn btn-primary w-100">Dettagli</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-success shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Richieste</h5>
+                    <p class="display-4">{{ richieste.count }}</p>
+                    <a href="{% url 'richieste-lista' %}" class="btn btn-success w-100">Dettagli</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card border-warning shadow h-100">
+                <div class="card-body">
+                    <h5 class="card-title">Log</h5>
+                    <p class="display-4">{{ log_entries.count }}</p>
+                    <a href="{% url 'log-lista' %}" class="btn btn-warning w-100">Dettagli</a>
+                </div>
+            </div>
+        </div>
+
+        
+
+
+    <div class="text-center mb-4">
+        <a href="{% url 'dashboard-export-excel' %}" class="btn btn-success me-2">
+            <i class="fas fa-file-excel"></i> Esporta in Excel
+        </a>
+        <a href="{% url 'dashboard-export-pdf' %}" class="btn btn-danger">
+            <i class="fas fa-file-pdf"></i> Esporta in PDF
+        </a>
+    </div>
+
+
+
+    <!-- Area grafici -->
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card shadow p-4 mb-4">
+                <h4 class="text-center">Dati Globali</h4>
+                <canvas id="graficoBarre"></canvas>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card shadow p-4 mb-4">
+                <h4 class="text-center">Distribuzione</h4>
+                <canvas id="graficoTorta"></canvas>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+
+{% block extra_scripts %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    var barre = document.getElementById('graficoBarre').getContext('2d');
+    var graficoBarre = new Chart(barre, {
+        type: 'bar',
+        data: {
+            labels: ['Contenuti', 'Richieste', 'Log'],
+            datasets: [{
+                label: 'Totale',
+                data: [{{ contenuti.count }}, {{ richieste.count }}, {{ log_entries.count }}],
+                backgroundColor: ['#0d6efd', '#198754', '#ffc107'],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    var torta = document.getElementById('graficoTorta').getContext('2d');
+    var graficoTorta = new Chart(torta, {
+        type: 'pie',
+        data: {
+            labels: ['Contenuti', 'Richieste', 'Log'],
+            datasets: [{
+                data: [{{ contenuti.count }}, {{ richieste.count }}, {{ log_entries.count }}],
+                backgroundColor: ['#0d6efd', '#198754', '#ffc107'],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'bottom' }
+            }
+        }
+    });
+});
+</script>
+{% endblock %}

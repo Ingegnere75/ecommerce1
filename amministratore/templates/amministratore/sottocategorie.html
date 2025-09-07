@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load form_tags %}
+
+{% block title %}Gestione Sottocategorie{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <!-- Pulsante indietro -->
+  <div class="mb-4">
+    <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill shadow-sm">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+    </a>
+  </div>
+
+  <!-- Intestazione -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="fw-bold text-primary">📂 Sottocategorie</h2>
+    <a href="{% url 'aggiungi_sottocategoria' %}" class="btn btn-primary rounded-pill px-4 shadow-sm">+ Aggiungi</a>
+  </div>
+
+  <!-- Cards -->
+  <div class="row">
+    {% for s in sottocategorie %}
+      <div class="col-md-6 col-lg-4 mb-4">
+        <div class="card shadow-sm h-100 rounded-4 border-0">
+
+          {% if s.immagine %}
+            <img src="{{ s.immagine.url }}" class="card-img-top rounded-top" style="height: 200px; object-fit: cover;">
+          {% endif %}
+
+          <div class="card-body">
+            <h5 class="card-title text-dark fw-semibold">{{ s.nome }}</h5>
+            <p class="card-text text-muted small">{{ s.descrizione|truncatechars:100 }}</p>
+            
+            <div class="mt-2">
+              <span class="badge bg-primary mb-1">Codice: {{ s.codice }}</span><br>
+              <span class="badge bg-secondary mb-1">Categoria: {{ s.categoria.nome }}</span><br>
+              <span class="badge bg-light text-dark border">L: {{ s.contenuto_larghezza }} px</span>
+              <span class="badge bg-light text-dark border">H: {{ s.contenuto_altezza }} px</span>
+            </div>
+            
+            {% if s.contenuto_html %}
+              <div class="alert alert-info mt-3 p-2 small text-break">
+                Contenuto personalizzato presente
+              </div>
+            {% endif %}
+          </div>
+
+          <div class="card-footer bg-white border-0 text-center d-flex justify-content-center gap-2">
+            <a href="{% url 'modifica_sottocategoria' s.id %}" class="btn btn-warning btn-sm px-3 rounded-pill shadow-sm">✏️ Modifica</a>
+            <a href="{% url 'elimina_sottocategoria' s.id %}" class="btn btn-danger btn-sm px-3 rounded-pill shadow-sm"
+               onclick="return confirm('Sicuro di voler eliminare questa sottocategoria?')">🗑️ Elimina</a>
+          </div>
+        </div>
+      </div>
+    {% empty %}
+      <div class="col-12">
+        <div class="alert alert-warning text-center">
+          Nessuna sottocategoria disponibile.
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

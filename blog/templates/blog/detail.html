@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{{ articolo.titolo }}{% endblock %}
+{% block content %}
+<style>
+  body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+  }
+
+  .detail-bg-wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    {% if articolo.sfondo_width %}width: {{ articolo.sfondo_width }}px;{% else %}width: 100%;{% endif %}
+    {% if articolo.sfondo_height %}height: {{ articolo.sfondo_height }}px;{% else %}height: 100vh;{% endif %}
+    background: url('{% if articolo.immagine_sfondo %}{{ articolo.immagine_sfondo.url }}{% else %}{% static "img/default-bg.jpg" %}{% endif %}') no-repeat center center fixed;
+    background-size: cover;
+    z-index: 0;
+  }
+
+  .detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.6);
+    box-shadow: inset 0 0 80px rgba(0, 0, 0, 0.15);
+    z-index: 1;
+  }
+
+  .detail-content {
+    position: relative;
+    z-index: 2;
+    padding: 80px 15px;
+  }
+
+  .glass-card {
+    background-color: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(4px);
+    border-radius: 1.2rem;
+    padding: 2rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: #000;
+  }
+
+  .form-select, .form-control {
+    font-size: 0.9rem;
+    border-radius: 0.6rem;
+    padding: 0.4rem 0.75rem;
+  }
+
+  .form-label {
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+
+  .btn-primary {
+    font-size: 0.9rem;
+    padding: 0.45rem 1.2rem;
+    border-radius: 0.5rem;
+  }
+
+  .emoji-badge {
+    font-size: 0.9rem;
+    padding: 0.25em 0.6em;
+    background-color: rgba(255, 255, 255, 0.8);
+    color: #333;
+    border-radius: 1rem;
+    font-weight: 500;
+  }
+
+  .comment-box {
+    background-color: rgba(255, 255, 255, 0.04);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .reply-box {
+    background-color: transparent;
+    border-left: 2px solid rgba(255, 255, 255, 0.2);
+    margin-left: 20px;
+    margin-top: 10px;
+    padding-left: 15px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+
+  @media (max-width: 768px) {
+    .glass-card {
+      padding: 1rem;
+    }
+    .glass-card h1 {
+      font-size: 1.5rem;
+    }
+    .glass-card .fs-5 {
+      font-size: 1rem;
+      width: 100% !important;
+      height: auto !important;
+    }
+    img, video {
+      max-width: 100% !important;
+      height: auto !important;
+    }
+    .detail-bg-wrapper,
+    .detail-overlay {
+      width: 100% !important;
+      height: 100vh !important;
+    }
+  }
+</style>
+
+<div class="detail-bg-wrapper"></div>
+<div class="detail-overlay"></div>
+
+<div class="detail-content">
+  <div class="container">
+    <div class="glass-card">
+      <h1 class="fw-bold">{{ articolo.titolo }}</h1>
+      <p class="text-muted mb-4">Pubblicato il {{ articolo.data_pubblicazione|date:"d M Y" }}</p>
+
+      {% if articolo.immagine %}
+      <img src="{{ articolo.immagine.url }}" alt="{{ articolo.titolo }}" class="mb-4" style="max-width: 100%; {% if articolo.img_width %}width: {{ articolo.img_width }}px;{% endif %} {% if articolo.img_height %}height: {{ articolo.img_height }}px;{% endif %} object-fit: cover; border-radius: 1rem; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+      {% endif %}
+
+      {% if articolo.video %}
+      <video controls class="mb-4" style="{% if articolo.video_width %}width: {{ articolo.video_width }}px;{% else %}width: 100%;{% endif %} {% if articolo.video_height %}height: {{ articolo.video_height }}px;{% endif %}">
+        <source src="{{ articolo.video.url }}" type="video/mp4">
+        Il tuo browser non supporta il video.
+      </video>
+      {% endif %}
+
+      <div class="fs-5 mb-5" style="{% if articolo.contenuto_width %}width: {{ articolo.contenuto_width }}px;{% endif %} {% if articolo.contenuto_height %}height: {{ articolo.contenuto_height }}px; overflow-y:auto;{% endif %}">
+        {{ articolo.contenuto|linebreaks }}
+      </div>
+
+      <div>
+        <h3 class="mb-4">💬 Commenti</h3>
+        {% for commento in commenti %}
+        <div class="comment-box">
+          <div class="d-flex justify-content-between align-items-center">
+            <strong>{{ commento.utente.username }}</strong>
+            <span class="badge emoji-badge">{{ commento.emoji }}</span>
+          </div>
+          <p class="mt-2 mb-1">{{ commento.testo }}</p>
+          <small class="text-muted">{{ commento.data_pubblicazione|date:"d M Y H:i" }}</small>
+
+          {% for risposta in commento.risposte.all %}
+          <div class="reply-box">
+            <div class="d-flex justify-content-between">
+              <strong>{{ risposta.utente.username }}</strong>
+              <span class="badge emoji-badge">{{ risposta.emoji }}</span>
+            </div>
+            <p class="mt-2 mb-1">{{ risposta.testo }}</p>
+            <small class="text-muted">{{ risposta.data_pubblicazione|date:"d M Y H:i" }}</small>
+          </div>
+          {% endfor %}
+        </div>
+        {% empty %}
+        <p class="text-muted">Nessun commento ancora. Sii il primo a dire la tua!</p>
+        {% endfor %}
+      </div>
+
+      <div class="mt-5">
+        <h4 class="mb-3">✍️ Lascia un commento</h4>
+        <form method="post">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="testo" class="form-label">Commento</label>
+            <textarea name="testo" class="form-control" rows="4" required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="emoji" class="form-label">Scegli un'emozione</label>
+            <select name="emoji" class="form-select w-auto">
+              <option value="👍">👍 Like</option>
+              <option value="😊">😊 Sorriso</option>
+              <option value="😮">😮 Wow</option>
+              <option value="😢">😢 Triste</option>
+            </select>
+          </div>
+          <div class="d-flex justify-content-between align-items-center mt-4 gap-3 flex-wrap">
+            <button type="submit" class="btn btn-success rounded-pill shadow-sm d-flex align-items-center px-4 py-2">
+              <i class="fas fa-paper-plane me-2"></i> Invia commento
+            </button>
+            <a href="{{ request.META.HTTP_REFERER|default:'/' }}" class="btn btn-outline-secondary rounded-pill shadow-sm d-flex align-items-center px-4 py-2">
+              <i class="fas fa-arrow-left me-2"></i> Torna indietro
+            </a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

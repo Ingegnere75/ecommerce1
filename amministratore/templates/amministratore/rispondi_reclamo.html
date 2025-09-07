@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h2>📩 Rispondi al Reclamo #{{ reclamo.numero_ticket }}</h2>
+
+    <ul class="list-group mb-4">
+        <li class="list-group-item"><strong>Utente:</strong> {{ reclamo.nome }} {{ reclamo.cognome }}</li>
+        <li class="list-group-item"><strong>Email:</strong> {{ reclamo.email }}</li>
+        <li class="list-group-item"><strong>Ordine:</strong> {{ reclamo.numero_ordine }}</li>
+        <li class="list-group-item"><strong>Oggetto:</strong> {{ reclamo.oggetto }}</li>
+        <li class="list-group-item"><strong>Messaggio:</strong><br> {{ reclamo.messaggio|linebreaks }}</li>
+    </ul>
+
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="risposta_admin" class="form-label">Risposta dell’amministratore:</label>
+            <textarea class="form-control" name="risposta_admin" rows="5" required>{{ reclamo.risposta_admin }}</textarea>
+        </div>
+        <div class="d-flex justify-content-between">
+            <a href="{% url 'gestione_reclami' %}" class="btn btn-secondary">🔙 Torna indietro</a>
+            <button type="submit" class="btn btn-primary">📤 Invia Risposta</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

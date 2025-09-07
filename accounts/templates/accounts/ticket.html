@@ -1,0 +1,93 @@
+ {% extends 'base.html' %}
+ {% load static %}
+
+{% block content %}
+<style>
+    @media print {
+        .no-print, .navbar, footer, .btn, .d-print-none {
+            display: none !important;
+        }
+
+        body {
+            background: white;
+            font-size: 13pt;
+        }
+
+        .ticket-card {
+            border: none !important;
+            box-shadow: none !important;
+        }
+
+        .ticket-wrapper {
+            margin-top: 0 !important;
+        }
+
+        .ticket-title {
+            color: black !important;
+            text-align: center;
+            font-size: 20pt;
+            margin-bottom: 20px;
+        }
+
+        .ticket-label {
+            font-weight: bold;
+        }
+    }
+
+    .ticket-label {
+        font-weight: 600;
+    }
+
+    .ticket-card p {
+        margin-bottom: 8px;
+    }
+    .btn-dashboard {
+        margin-top: 30px;
+        background: linear-gradient(135deg, #6c757d, #495057);
+        color: white;
+        font-weight: bold;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: 0.3s;
+    }
+</style>
+
+<div class="container ticket-wrapper mt-5 mb-5">
+    <div class="mb-4">
+        <a href="{% url 'dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+
+    <h3 class="text-center text-danger ticket-title d-print-block">
+        📄 Dettaglio Ticket
+    </h3>
+
+    <div class="card p-4 shadow-lg rounded-4 ticket-card">
+        <p><span class="ticket-label">👤 Nome:</span> {{ ticket.nome }}</p>
+        <p><span class="ticket-label">👤 Cognome:</span> {{ ticket.cognome }}</p>
+        <p><span class="ticket-label">📧 Email:</span> {{ ticket.email }}</p>
+        <p><span class="ticket-label">🧾 Numero Ordine:</span> {{ ticket.numero_ordine }}</p>
+        <p><span class="ticket-label">📝 Oggetto:</span> {{ ticket.oggetto }}</p>
+        <p><span class="ticket-label">✉️ Messaggio:</span><br>{{ ticket.messaggio }}</p>
+        <p><span class="ticket-label">🎫 Numero Ticket:</span> <span class="text-success">{{ ticket.numero_ticket }}</span></p>
+
+        {% if ticket.allegato %}
+        <p class="mt-2">
+            <span class="ticket-label">📎 Allegato:</span>
+            <a href="{{ ticket.allegato.url }}" target="_blank" class="btn btn-outline-info btn-sm d-print-none">Visualizza</a>
+        </p>
+        {% endif %}
+
+        <div class="text-end mt-4 no-print">
+            <button class="btn btn-outline-primary" onclick="window.print()">🖨️ Stampa Ticket</button>
+        </div>
+    </div>
+    
+    <div class="text-center no-print">
+        <a href="{% url 'dashboard' %}" class="btn btn-dashboard">
+            🔙 Torna alla Dashboard
+        </a>
+</div>
+{% endblock %}

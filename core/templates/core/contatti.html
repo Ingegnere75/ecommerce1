@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Contattaci - Kaira{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="mb-4">
+    <a href="{% url 'home' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna alla Home
+    </a>
+  </div>
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow border-0">
+        <div class="card-body p-5">
+          <h2 class="fw-bold mb-4 text-center">Contattaci</h2>
+
+          {% if request.GET.success %}
+            <div id="messaggioSuccesso">
+              <div class="alert alert-success alert-dismissible fade show" role="alert">
+                Messaggio inviato con successo.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Chiudi"></button>
+              </div>
+            </div>
+          {% endif %}
+
+          <form method="post" enctype="multipart/form-data" id="contattoForm">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <input type="email" name="email" id="email" class="form-control" placeholder="Inserisci la tua email" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="oggetto" class="form-label">Oggetto</label>
+              <input type="text" name="oggetto" id="oggetto" class="form-control" placeholder="Scrivi l'oggetto del messaggio" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="messaggio" class="form-label">Messaggio</label>
+              <textarea name="messaggio" id="messaggio" class="form-control" rows="6" placeholder="Scrivi il tuo messaggio qui..." required></textarea>
+            </div>
+
+            <div class="mb-4">
+              <label for="allegato" class="form-label">Allega file (immagini, PDF, video...)</label>
+              <input type="file" name="allegato" id="allegato" class="form-control">
+            </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-dark btn-lg">📤 Invia Messaggio</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Nasconde il messaggio di successo dopo 5 secondi
+  setTimeout(() => {
+    const alertBox = document.getElementById('messaggioSuccesso');
+    if (alertBox) {
+      alertBox.style.display = 'none';
+    }
+  }, 5000);
+
+  // Reset del modulo dopo invio (solo lato client)
+  document.getElementById('contattoForm').addEventListener('submit', function () {
+    setTimeout(() => {
+      this.reset();
+    }, 200);
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% load static %}
+
+{% if sottocategorie %}
+  {% for sottocategoria in sottocategorie %}
+    <div class="col-md-4 col-lg-3 mb-4 text-center">
+      <a href="{% url 'prodotti_per_sottocategoria' sottocategoria.slug %}" class="text-decoration-none d-block">
+        
+        {% if sottocategoria.immagine %}
+          <img src="{{ sottocategoria.immagine.url }}"
+               alt="{{ sottocategoria.nome }}"
+               style="width:{{ sottocategoria.larghezza|default:300 }}px; height:{{ sottocategoria.altezza|default:200 }}px; object-fit:cover;"
+               class="img-fluid mb-3 rounded shadow">
+        {% else %}
+          <img src="{% static 'img/default-placeholder.png' %}"
+               alt="Nessuna immagine"
+               style="width:300px; height:200px; object-fit:cover;"
+               class="img-fluid mb-3 rounded shadow">
+        {% endif %}
+
+        <h5 class="fw-bold text-dark">{{ sottocategoria.nome }}</h5>
+
+        {% if sottocategoria.descrizione %}
+          <p class="text-muted small">{{ sottocategoria.descrizione }}</p>
+        {% endif %}
+      </a>
+    </div>
+  {% endfor %}
+{% else %}
+  <div class="col-12 text-center">
+    <div class="alert alert-info" role="alert">
+      Questa categoria non ha sottocategorie disponibili.
+    </div>
+  </div>
+{% endif %}

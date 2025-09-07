@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Controllo Contenuti (MongoDB){% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h1 class="fw-bold mb-4">🗂️ Contenuti Salvati su MongoDB</h1>
+
+    <div class="row row-cols-1 g-4">
+        {% for contenuto in contenuti %}
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">{{ contenuto.titolo }}</h5>
+                    <p class="card-text">{{ contenuto.contenuto|truncatewords:50 }}</p>
+                    <p class="small text-muted">
+                        🌐 URL: <a href="{{ contenuto.url_pagina }}" target="_blank">{{ contenuto.url_pagina }}</a><br>
+                        📅 Salvato il: {{ contenuto.timestamp|date:"d/m/Y H:i" }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Nessun contenuto salvato ancora.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

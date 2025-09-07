@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Log Registrati{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="mb-4">
+        <a href="{% url 'admin-dashboard' %}" class="btn btn-outline-primary rounded-pill">
+          <i class="fas fa-arrow-left me-1"></i> Torna alla Dashboard
+        </a>
+      </div>
+    <h1 class="fw-bold mb-4">Log Registrati</h1>
+
+    <div class="row row-cols-1 g-4">
+        {% for log in log_entries %}
+        <div class="col">
+            <div class="card shadow">
+                <div class="card-body">
+                    <h5 class="card-title">{{ log.action_type }}</h5>
+                    <p class="card-text">Modello: {{ log.model_name }} | ID Oggetto: {{ log.object_id }}</p>
+                    <p class="card-text">Utente: {{ log.user }}</p>
+                    <small class="text-muted">{{ log.timestamp|date:"d/m/Y H:i:s" }}</small>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Nessun log trovato.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

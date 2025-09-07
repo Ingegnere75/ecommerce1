@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container py-4">
+    <div class="mb-4">
+    <a href="{% url 'admin-magazzino' %}" class="btn btn-outline-primary rounded-pill">
+      <i class="fas fa-arrow-left me-1"></i> Torna al Magazzino
+    </a>
+  </div>
+  <h2 class="fw-bold text-primary">📊 Situazione Magazzino</h2>
+
+  <form method="get" class="d-flex mb-3">
+    <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Cerca per codice o nome...">
+    <button class="btn btn-outline-primary me-2" type="submit">🔍 Cerca</button>
+    <button class="btn btn-outline-dark" name="export_pdf" value="1">⬇️ Esporta in PDF</button>
+  </form>
+
+  <table class="table table-bordered table-hover text-center align-middle">
+    <thead class="table-primary">
+      <tr>
+        <th>Codice</th>
+        <th>Nome</th>
+        <th>Disponibilità</th>
+        <th>Prezzo</th>
+        <th>Categoria</th>
+        <th>Azioni</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for prodotto in prodotti %}
+      <tr>
+        <td>{{ prodotto.codice_prodotto }}</td>
+        <td>{{ prodotto.nome }}</td>
+        <td>{{ prodotto.disponibilita }}</td>
+        <td>€ {{ prodotto.prezzo|floatformat:2 }}</td>
+        <td>{{ prodotto.categoria.nome }}</td>
+        <td>
+              <a href="{% url 'modifica_prodotto' prodotto.id %}" class="btn btn-warning btn-sm btn-action" title="Modifica">
+                <i class="fas fa-edit"></i>
+              </a>
+              <a href="{% url 'elimina_prodotto' prodotto.id %}" class="btn btn-danger btn-sm btn-action" onclick="return confirm('Confermi l\'eliminazione?');" title="Elimina">
+                <i class="fas fa-trash-alt"></i>
+              </a>
+            </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-muted">Nessun prodotto trovato.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

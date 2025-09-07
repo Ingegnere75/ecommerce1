@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Conferma Ordine</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background-color: #f9f9f9;
+      color: #333;
+      margin: 0;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 700px;
+      margin: auto;
+      background-color: #fff;
+      border-radius: 10px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+
+    .header {
+      border-bottom: 2px solid #eee;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+
+    .header h2 {
+      margin: 0;
+      color: #0d6efd;
+    }
+
+    .contact-info p {
+      margin: 3px 0;
+      font-size: 14px;
+      color: #555;
+    }
+
+    h3 {
+      color: #2c3e50;
+      margin-top: 0;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+    }
+
+    table thead {
+      background-color: #f0f0f0;
+    }
+
+    table th, table td {
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+      text-align: left;
+      font-size: 15px;
+    }
+
+    table tfoot td {
+      font-weight: bold;
+      background-color: #f9f9f9;
+    }
+
+    .message {
+      margin-top: 30px;
+      font-size: 16px;
+      line-height: 1.6;
+    }
+
+    .thanks {
+      margin-top: 20px;
+      font-size: 16px;
+      font-style: italic;
+      color: #2c3e50;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 10px; }
+      .container { padding: 20px; }
+      table th, table td { font-size: 14px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h2>{{ contatti.nome }}</h2>
+      <div class="contact-info">
+        <p>{{ contatti.indirizzo }}, {{ contatti.cap_citta }}</p>
+        <p>P.IVA: {{ contatti.partita_iva }}</p>
+        <p>Email: {{ contatti.email }} | Tel: {{ contatti.telefono }}</p>
+      </div>
+    </div>
+
+    <h3>Conferma Ordine #{{ ordine.codice_ordine }}</h3>
+    <p>Grazie per il tuo ordine, <strong>{{ ordine.nome }} {{ ordine.cognome }}</strong>.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Prodotto</th>
+          <th>Prezzo</th>
+          <th>Quantità</th>
+          <th>Totale</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in articoli %}
+        <tr>
+          <td>{{ item.prodotto.nome }}</td>
+          <td>€ {{ item.prezzo_unitario|floatformat:2 }}</td>
+          <td>{{ item.quantita }}</td>
+          <td>€ {{ item.get_subtotale|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">Totale Ordine (incluso spedizione):</td>
+          <td><strong>€ {{ ordine.totale_pagare|floatformat:2 }}</strong></td>
+        </tr>
+      </tfoot>
+    </table>
+
+    <div class="message">
+      <p>Abbiamo ricevuto la tua richiesta di ordine. Ti invieremo una conferma quando il pagamento sarà completato.</p>
+    </div>
+
+    <p class="thanks">Grazie per aver scelto {{ contatti.nome }}!</p>
+  </div>
+</body>
+</html>

@@ -1,0 +1,30 @@
+<div class="text-center">
+
+  {% if prodotto.prezzo_scontato and prodotto.prezzo_scontato < prodotto.prezzo %}
+    <div class="mb-3">
+      <span class="text-muted text-decoration-line-through fs-5" style="font-weight: 500;">
+        € {{ prodotto.prezzo|floatformat:2 }}
+      </span><br>
+      <span class="text-success fw-bold display-6">
+        € {{ prodotto.prezzo_scontato|floatformat:2 }}
+      </span>
+    </div>
+  {% else %}
+    <div class="mb-3">
+      <span class="text-dark fw-bold display-6">
+        € {{ prodotto.prezzo|floatformat:2 }}
+      </span>
+    </div>
+  {% endif %}
+
+  {% if prodotto.sottocategoria and prodotto.sottocategoria.is_sconto %}
+    <div class="badge bg-danger text-white px-4 py-2 fs-6">
+      Sconto del {{ prodotto.sottocategoria.percentuale_sconto }}%
+    </div>
+  {% elif prodotto.categoria and prodotto.categoria.is_sconto %}
+    <div class="badge bg-danger text-white px-4 py-2 fs-6">
+      Sconto del {{ prodotto.categoria.percentuale_sconto }}%
+    </div>
+  {% endif %}
+
+</div>

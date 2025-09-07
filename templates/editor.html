@@ -1,0 +1,82 @@
+<!-- editor.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Editor Visuale{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <h2 class="text-center fw-bold mb-4">Editor Visuale Home</h2>
+  <div class="row">
+    <!-- Pannello laterale con gli elementi -->
+    <div class="col-md-3">
+      <div class="card mb-4">
+        <div class="card-header bg-dark text-white">
+          Elementi Disponibili
+        </div>
+        <div class="card-body">
+          <div id="element-palette">
+            <div class="draggable-element btn btn-outline-primary w-100 mb-2" data-type="testo">Testo</div>
+            <div class="draggable-element btn btn-outline-success w-100 mb-2" data-type="immagine">Immagine</div>
+            <div class="draggable-element btn btn-outline-warning w-100 mb-2" data-type="video">Video</div>
+            <div class="draggable-element btn btn-outline-secondary w-100 mb-2" data-type="banner">Banner</div>
+          </div>
+        </div>
+      </div>
+      <button id="save-layout" class="btn btn-success w-100">Salva Modifiche</button>
+    </div>
+
+    <!-- Area di composizione -->
+    <div class="col-md-9">
+      <div id="layout-area" class="border p-3 bg-light rounded min-vh-50">
+        <p class="text-muted">Trascina qui gli elementi per costruire la tua home page...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- CSS aggiuntivo -->
+<style>
+  .draggable-element {
+    cursor: grab;
+  }
+  .layout-block {
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 2px dashed #ccc;
+    background-color: #fff;
+  }
+</style>
+
+<!-- Script JS drag & drop -->
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const palette = document.getElementById('element-palette');
+    const layout = document.getElementById('layout-area');
+
+    palette.querySelectorAll('.draggable-element').forEach(elem => {
+      elem.addEventListener('dragstart', e => {
+        e.dataTransfer.setData('type', e.target.dataset.type);
+      });
+      elem.setAttribute('draggable', 'true');
+    });
+
+    layout.addEventListener('dragover', e => {
+      e.preventDefault();
+    });
+
+    layout.addEventListener('drop', e => {
+      e.preventDefault();
+      const type = e.dataTransfer.getData('type');
+      const block = document.createElement('div');
+      block.className = 'layout-block';
+      block.innerHTML = `<strong>${type.toUpperCase()}</strong> - <em>modifica contenuto...</em>`;
+      layout.appendChild(block);
+    });
+
+    document.getElementById('save-layout').addEventListener('click', () => {
+      alert('⚠️ Salvataggio non implementato ancora (fase 2).');
+    });
+  });
+</script>
+{% endblock %}
